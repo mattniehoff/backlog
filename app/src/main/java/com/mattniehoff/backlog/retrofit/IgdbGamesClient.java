@@ -3,6 +3,8 @@ package com.mattniehoff.backlog.retrofit;
 import com.mattniehoff.backlog.model.igdb.GameDetail;
 import com.mattniehoff.backlog.model.igdb.GameSearchResult;
 
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -14,5 +16,5 @@ public interface IgdbGamesClient {
     Call<GameDetail> getGameById(@Path("id") int gameId, @Header("user-key") String userkey);
 
     @GET("games/")
-    Call<GameSearchResult> searchGames(@Query("search") String queryString, @Header("user-key") String userkey);
+    Call<List<GameSearchResult>> searchGames(@Query("search") String queryString, @Header("user-key") String userkey);
 }
