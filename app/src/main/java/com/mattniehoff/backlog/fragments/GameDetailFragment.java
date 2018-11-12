@@ -16,11 +16,23 @@ import com.mattniehoff.backlog.viewmodels.GameDetailViewModelFactory;
 
 public class GameDetailFragment extends Fragment {
 
+    // argument representing item ID for the fragment
+    public static final String GAME_ID = "game_id";
+
     private GameDetailViewModel mViewModel;
     private int gameId;
 
     public static GameDetailFragment newInstance() {
         return new GameDetailFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if (getArguments().containsKey(GAME_ID)) {
+            gameId = getArguments().getInt(GAME_ID);
+        }
     }
 
     @Override
