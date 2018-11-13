@@ -18,7 +18,10 @@ public interface GameDao {
     @Query("SELECT * FROM game_entry WHERE id = :gameId")
     LiveData<GameEntry> getGameById(int gameId);
 
-    @Insert
+    @Query("SELECT * FROM GAME_ENTRY WHERE backlogPriority <> null")
+    LiveData<List<GameEntry>> getAllBacklogGames();
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertGame(GameEntry gameEntry);
 
     @Insert
@@ -32,4 +35,7 @@ public interface GameDao {
 
     @Delete
     void deleteGames(GameEntry... gameEntries);
+
+    @Query("DELETE FROM game_entry WHERE id = :gameId")
+    void deleteGameById(int gameId);
 }

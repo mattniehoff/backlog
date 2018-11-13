@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,13 +21,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mattniehoff.backlog.R;
+import com.mattniehoff.backlog.adapters.GameEntryOnItemClickHandler;
+import com.mattniehoff.backlog.adapters.SearchAdapter;
+import com.mattniehoff.backlog.utils.InjectorUtils;
 import com.mattniehoff.backlog.viewmodels.SearchViewModel;
+import com.mattniehoff.backlog.viewmodels.SearchViewModelFactory;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 public class SearchFragment extends Fragment {
 
+    private static final String TAG = SearchFragment.class.getSimpleName();
     private SearchViewModel searchViewModel;
     private EditText editText;
     private ImageButton searchImageButton;
+
+    private RecyclerView recyclerView;
+    private SearchAdapter searchAdapter;
+    private int position = RecyclerView.NO_POSITION;
 
     public static SearchFragment newInstance() {
         return new SearchFragment();
@@ -37,6 +52,12 @@ public class SearchFragment extends Fragment {
 
         setupImageSearchButton(rootView);
         setupEditText(rootView);
+
+        recyclerView = rootView.findViewById(R.id.search_fragment_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+
+        searchAdapter = new SearchAdapter(getContext(), (GameEntryOnItemClickHandler)getActivity());
+        recyclerView.setAdapter(searchAdapter);
 
         return rootView;
     }
@@ -66,7 +87,18 @@ public class SearchFragment extends Fragment {
         searchImageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(getContext(), "Search for " + editText.getText(), Toast.LENGTH_LONG).show();
+                String encodedText;
+                try {
+                    encodedText = URLEncoder.encode(editText.getText().toString(), "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    Log.e(TAG, "UnsupportedEncodingException:  " + e.toString());
+                    e.printStackTrace();
+                    Toast.makeText(getContext(), "Failed to encode" + editText.getText(), Toast.LENGTH_LONG).show();
+                    return;
+                }
+
+                Toast.makeText(getContext(), "Search for " + encodedText, Toast.LENGTH_LONG).show();
+                searchViewModel.runQuery(encodedText);
             }
         });
     }
@@ -74,8 +106,18 @@ public class SearchFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        searchViewModel = ViewModelProviders.of(this).get(SearchViewModel.class);
-        // TODO: Use the ViewModel
+        SearchViewModelFactory factory = InjectorUtils.provideSearchViewModelFactory(getActivity().getApplicationContext());
+        searchViewModel = ViewModelProviders.of(this, factory).get(SearchViewModel.class);
+
+        // Observe getSearchResults
+        searchViewModel.getSearchResults().observe(getViewLifecycleOwner(), gameSearchResults -> {
+            searchAdapter.setGameSearchResults(gameSearchResults);
+            if (position == RecyclerView.NO_POSITION) {
+                position = 0;
+            }
+            recyclerView.smoothScrollToPosition(position);
+        });
+
     }
 
 }

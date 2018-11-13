@@ -12,9 +12,9 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface IgdbGamesClient {
-    @GET("games/{id}")
-    Call<GameDetail> getGameById(@Path("id") int gameId, @Header("user-key") String userkey);
+    @GET("games/{id}/")
+    Call<List<GameDetail>> getGameById(@Path("id") int gameId, @Header("user-key") String userkey);
 
-    @GET("games/")
+    @GET("games/?limit=3")
     Call<List<GameSearchResult>> searchGames(@Query("search") String queryString, @Header("user-key") String userkey);
 }

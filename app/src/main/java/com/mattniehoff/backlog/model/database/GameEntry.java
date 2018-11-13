@@ -21,6 +21,16 @@ public class GameEntry {
 
     private Integer backlogPriority;
 
+    private String coverUrl;
+
+    public GameEntry(Integer id, @NonNull String name, @NonNull Date dateAdded, Integer backlogPriority, String coverUrl) {
+        this.id = id;
+        this.name = name;
+        this.dateAdded = dateAdded;
+        this.backlogPriority = backlogPriority;
+        this.coverUrl = coverUrl;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -53,5 +63,13 @@ public class GameEntry {
 
     public void setBacklogPriority(Integer backlogPriority) {
         this.backlogPriority = backlogPriority;
+    }
+
+    public String getCoverUrl() {
+        return coverUrl;
+    }
+
+    public void setCoverUrl(String coverUrl) {
+        this.coverUrl = coverUrl;
     }
 }
