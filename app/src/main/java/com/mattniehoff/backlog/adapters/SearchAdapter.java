@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
-    private List<GameSearchResult> gameSearchResults;
+    private List<GameEntry> gameSearchResults;
 
     private final Context context;
     private final GameEntryOnItemClickHandler clickHandler;
@@ -37,20 +37,18 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
 
     @Override
     public void onBindViewHolder(@NonNull SearchAdapter.SearchViewHolder searchViewHolder, int position) {
-        GameSearchResult gameSearchResult = gameSearchResults.get(position);
+        GameEntry gameSearchResult = gameSearchResults.get(position);
 
-        // TODO: Bind actual title
-        //searchViewHolder.gameTitleTextView.setText(gameSearchResult.getName());
-        searchViewHolder.gameTitleTextView.setText("Search Result Title");
+        searchViewHolder.gameTitleTextView.setText(gameSearchResult.getName());
         searchViewHolder.gameIdTextView.setText("Game ID: " + gameSearchResult.getId());
 
-//        String gameCoverUrl = gameSearchResult.getCoverUrl();
-//        if (gameCoverUrl.length() > 0) {
-//            Picasso.get()
-//                    .load(gameCoverUrl)
-//                    .error(R.drawable.ic_videogame_asset_black_24dp)
-//                    .into(searchViewHolder.gameCoverImageView);
-//        }
+        String gameCoverUrl = gameSearchResult.getCoverUrl();
+        if (gameCoverUrl.length() > 0) {
+            Picasso.get()
+                    .load(gameCoverUrl)
+                    .error(R.drawable.ic_videogame_asset_black_24dp)
+                    .into(searchViewHolder.gameCoverImageView);
+        }
     }
 
     @Override
@@ -62,7 +60,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         return gameSearchResults.size();
     }
 
-    public void setGameSearchResults(final List<GameSearchResult> newGameEntryList) {
+    public void setGameSearchResults(final List<GameEntry> newGameEntryList) {
 //        newGameEntryList.add(new GameEntry(1, "The first game", new Date(), null, "http://images.igdb.com/igdb/image/upload/t_thumb/f9jvrf3nwdgdil287sla.jpg"));
 //        newGameEntryList.add(new GameEntry(2, "The second game", new Date(), null, "images.igdb.com/igdb/image/upload/t_thumb/f9jvrf3nwdgdil287sla.jpg"));
 

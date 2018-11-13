@@ -26,10 +26,10 @@ public class GameDetail implements Parcelable {
     private String url;
     @SerializedName("created_at")
     @Expose
-    private Integer createdAt;
+    private Long createdAt;
     @SerializedName("updated_at")
     @Expose
-    private Integer updatedAt;
+    private Long updatedAt;
     @SerializedName("summary")
     @Expose
     private String summary;
@@ -50,7 +50,7 @@ public class GameDetail implements Parcelable {
     private Double rating;
     @SerializedName("popularity")
     @Expose
-    private Integer popularity;
+    private Double popularity;
     @SerializedName("aggregated_rating")
     @Expose
     private Double aggregatedRating;
@@ -98,7 +98,7 @@ public class GameDetail implements Parcelable {
     private List<Integer> genres = null;
     @SerializedName("first_release_date")
     @Expose
-    private Integer firstReleaseDate;
+    private Long firstReleaseDate;
     @SerializedName("pulse_count")
     @Expose
     private Integer pulseCount;
@@ -150,15 +150,15 @@ public class GameDetail implements Parcelable {
         this.name = ((String) in.readValue((String.class.getClassLoader())));
         this.slug = ((String) in.readValue((String.class.getClassLoader())));
         this.url = ((String) in.readValue((String.class.getClassLoader())));
-        this.createdAt = ((Integer) in.readValue((Integer.class.getClassLoader())));
-        this.updatedAt = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.createdAt = ((Long) in.readValue((Long.class.getClassLoader())));
+        this.updatedAt = ((Long) in.readValue((Long.class.getClassLoader())));
         this.summary = ((String) in.readValue((String.class.getClassLoader())));
         this.collection = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.franchise = ((Integer) in.readValue((Integer.class.getClassLoader())));
         in.readList(this.franchises, (java.lang.Integer.class.getClassLoader()));
         this.hypes = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.rating = ((Double) in.readValue((Double.class.getClassLoader())));
-        this.popularity = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.popularity = ((Double) in.readValue((Double.class.getClassLoader())));
         this.aggregatedRating = ((Double) in.readValue((Double.class.getClassLoader())));
         this.aggregatedRatingCount = ((Integer) in.readValue((Integer.class.getClassLoader())));
         this.totalRating = ((Double) in.readValue((Double.class.getClassLoader())));
@@ -174,7 +174,7 @@ public class GameDetail implements Parcelable {
         in.readList(this.keywords, (java.lang.Integer.class.getClassLoader()));
         in.readList(this.themes, (java.lang.Integer.class.getClassLoader()));
         in.readList(this.genres, (java.lang.Integer.class.getClassLoader()));
-        this.firstReleaseDate = ((Integer) in.readValue((Integer.class.getClassLoader())));
+        this.firstReleaseDate = ((Long) in.readValue((Integer.class.getClassLoader())));
         this.pulseCount = ((Integer) in.readValue((Integer.class.getClassLoader())));
         in.readList(this.platforms, (java.lang.Integer.class.getClassLoader()));
         in.readList(this.releaseDates, (com.mattniehoff.backlog.model.igdb.ReleaseDate.class.getClassLoader()));
@@ -222,19 +222,19 @@ public class GameDetail implements Parcelable {
         this.url = url;
     }
 
-    public Integer getCreatedAt() {
+    public Long getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(Integer createdAt) {
+    public void setCreatedAt(Long createdAt) {
         this.createdAt = createdAt;
     }
 
-    public Integer getUpdatedAt() {
+    public Long getUpdatedAt() {
         return updatedAt;
     }
 
-    public void setUpdatedAt(Integer updatedAt) {
+    public void setUpdatedAt(Long updatedAt) {
         this.updatedAt = updatedAt;
     }
 
@@ -286,11 +286,11 @@ public class GameDetail implements Parcelable {
         this.rating = rating;
     }
 
-    public Integer getPopularity() {
+    public Double getPopularity() {
         return popularity;
     }
 
-    public void setPopularity(Integer popularity) {
+    public void setPopularity(Double popularity) {
         this.popularity = popularity;
     }
 
@@ -414,11 +414,11 @@ public class GameDetail implements Parcelable {
         this.genres = genres;
     }
 
-    public Integer getFirstReleaseDate() {
+    public Long getFirstReleaseDate() {
         return firstReleaseDate;
     }
 
-    public void setFirstReleaseDate(Integer firstReleaseDate) {
+    public void setFirstReleaseDate(Long firstReleaseDate) {
         this.firstReleaseDate = firstReleaseDate;
     }
 

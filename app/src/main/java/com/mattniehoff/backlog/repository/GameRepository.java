@@ -75,8 +75,8 @@ public class GameRepository {
     }
 
     // Network operations
-    public LiveData<List<GameSearchResult>> searchGamesByQueryString(String queryString) {
-        final MutableLiveData<List<GameSearchResult>> data = new MutableLiveData<>();
+    public LiveData<List<GameEntry>> searchGamesByQueryString(String queryString) {
+        final MutableLiveData<List<GameEntry>> data = new MutableLiveData<>();
         if (queryString.length() > 0) {
 
             webservice.searchGames(queryString, NetworkUtils.IGDB_API_KEY).enqueue(new Callback<List<GameSearchResult>>() {
@@ -90,34 +90,40 @@ public class GameRepository {
                     List<GameEntry> convertedResults = new ArrayList<>();
                     if (results != null && results.size() > 0) {
 
-//                    // Iterate through Ids and go get more data
-//                    for (GameSearchResult result : results) {
-//                        webservice.getGameById(result.getId(), NetworkUtils.IGDB_API_KEY).enqueue(new Callback<GameDetail>() {
-//                            @Override
-//                            public void onResponse(Call<GameDetail> call, Response<GameDetail> response) {
-//                                GameDetail detail = response.body();
-//                                if (detail != null) {
-//                                    convertedResults.add(
-//                                            new GameEntry(detail.getId(),
-//                                                    detail.getName(),
-//                                                    new Date(),
-//                                                    null,
-//                                                    detail.getCover().getUrl()));
-//                                }
-//                            }
-//
-//                            @Override
-//                            public void onFailure(Call<GameDetail> call, Throwable t) {
-//                                Log.e(TAG, "Failed to retrieve GameDetail for id " + result.getId());
-//                            }
-//                        });
-//                    }
-//                }
+                        // Iterate through Ids and go get more data
+                        for (GameSearchResult result : results) {
+                            webservice.getGameById(result.getId(), NetworkUtils.IGDB_API_KEY).enqueue(new Callback<List<GameDetail>>() {
+                                @Override
+                                public void onResponse(Call<List<GameDetail>> call, Response<List<GameDetail>> response) {
+                                    List<GameDetail> detailResult = response.body();
+                                    if (detailResult != null && detailResult.size() > 0) {
+                                        GameDetail detail = detailResult.get(0);
+                                        if (detail != null) {
+                                            convertedResults.add(
+                                                    new GameEntry(detail.getId(),
+                                                            detail.getName(),
+                                                            new Date(),
+                                                            null,
+                                                            detail.getCover().getHttpUrl()));
+                                        }
 
+                                        data.setValue(convertedResults);
+                                    }
+                                }
 
-                        data.setValue(response.body());
+                                @Override
+                                public void onFailure(Call<List<GameDetail>>  call, Throwable t) {
+                                    Log.e(TAG, "Failed to retrieve GameDetail for id " + result.getId());
+                                }
+                            });
+                        }
                     }
                 }
+
+//
+//                        data.setValue(response.body());
+//                    }
+//                }
 
                 @Override
                 public void onFailure(Call<List<GameSearchResult>> call, Throwable t) {
