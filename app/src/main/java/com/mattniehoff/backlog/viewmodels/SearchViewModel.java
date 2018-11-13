@@ -30,10 +30,6 @@ public class SearchViewModel extends ViewModel {
     private LiveData<List<GameSearchResult>> searchResults;
 
     public void init(String queryString) {
-        if (this.searchResults != null) {
-            return;
-        }
-
         this.searchResults = repository.searchGamesByQueryString(queryString);
     }
 
