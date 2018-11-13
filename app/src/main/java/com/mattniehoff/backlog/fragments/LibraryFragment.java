@@ -1,19 +1,32 @@
 package com.mattniehoff.backlog.fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mattniehoff.backlog.MainActivity;
+import com.mattniehoff.backlog.adapters.GameEntryOnItemClickHandler;
+import com.mattniehoff.backlog.adapters.LibraryAdapter;
+import com.mattniehoff.backlog.utils.InjectorUtils;
 import com.mattniehoff.backlog.viewmodels.LibraryViewModel;
 import com.mattniehoff.backlog.R;
+import com.mattniehoff.backlog.viewmodels.LibraryViewModelFactory;
 
 public class LibraryFragment extends Fragment {
 
+    private static final String TAG = LibraryFragment.class.getSimpleName();
+    private LibraryAdapter libraryAdapter;
+    private RecyclerView recyclerView;
+    private int position = RecyclerView.NO_POSITION;
     private LibraryViewModel mViewModel;
 
     public static LibraryFragment newInstance() {
@@ -23,14 +36,30 @@ public class LibraryFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.library_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.library_fragment, container, false);
+
+        recyclerView = rootView.findViewById(R.id.library_fragment_recycler_view);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
+
+        libraryAdapter = new LibraryAdapter(getContext(), (GameEntryOnItemClickHandler)getActivity());
+        recyclerView.setAdapter(libraryAdapter);
+
+        return rootView;
     }
 
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this).get(LibraryViewModel.class);
-        // TODO: Use the ViewModel
+        LibraryViewModelFactory factory = InjectorUtils.provideLibraryViewModelFactory(getActivity().getApplicationContext());
+        mViewModel = ViewModelProviders.of(this, factory).get(LibraryViewModel.class);
+        mViewModel.getGameLibrary().observe(this, gameLibrary -> {
+            libraryAdapter.setGameEntryList(gameLibrary);
+            if (position == RecyclerView.NO_POSITION) {
+                position = 0;
+            }
+            recyclerView.smoothScrollToPosition(position);
+        });
     }
+
 
 }
