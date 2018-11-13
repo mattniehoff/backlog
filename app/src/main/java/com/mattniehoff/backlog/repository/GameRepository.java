@@ -15,6 +15,8 @@ import com.mattniehoff.backlog.retrofit.IgdbGameService;
 import com.mattniehoff.backlog.retrofit.IgdbGamesClient;
 import com.mattniehoff.backlog.retrofit.NetworkUtils;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import retrofit2.Call;
@@ -26,6 +28,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 // Resources:
 // https://proandroiddev.com/mvvm-architecture-viewmodel-and-livedata-part-1-604f50cda1
 // https://codelabs.developers.google.com/codelabs/build-app-with-arch-components/index.html?index=..%2F..%2Findex#0
+// https://developer.android.com/jetpack/docs/guide#recommended-app-arch
 public class GameRepository {
     private static String TAG = GameRepository.class.getSimpleName();
 
@@ -34,20 +37,23 @@ public class GameRepository {
     private static GameRepository INSTANCE;
     private final GameDao gameDao;
     private final AppExecutors executors;
+    private final IgdbGamesClient webservice;
     private boolean mInitialized = false;
 
     private GameRepository(GameDao gameDao,
+                           IgdbGamesClient webservice,
                            AppExecutors executors) {
         this.gameDao = gameDao;
+        this.webservice = webservice;
         this.executors = executors;
     }
 
     public synchronized static GameRepository getInstance(
-            GameDao gameDao, AppExecutors executors) {
+            GameDao gameDao, IgdbGamesClient webservice, AppExecutors executors) {
         Log.d(TAG, "Getting the repository");
         if (INSTANCE == null) {
             synchronized (LOCK) {
-                INSTANCE = new GameRepository(gameDao,
+                INSTANCE = new GameRepository(gameDao, webservice,
                         executors);
                 Log.d(TAG, "Made new repository");
             }
@@ -66,6 +72,61 @@ public class GameRepository {
 
     public LiveData<GameEntry> getGameById(int gameId) {
         return gameDao.getGameById(gameId);
+    }
+
+    // Network operations
+    public LiveData<List<GameSearchResult>> searchGamesByQueryString(String queryString) {
+        final MutableLiveData<List<GameSearchResult>> data = new MutableLiveData<>();
+        if (queryString.length() > 0) {
+
+            webservice.searchGames(queryString, NetworkUtils.IGDB_API_KEY).enqueue(new Callback<List<GameSearchResult>>() {
+                @Override
+                public void onResponse(Call<List<GameSearchResult>> call, Response<List<GameSearchResult>> response) {
+
+                    // Save the response so we can iterate
+                    List<GameSearchResult> results = response.body();
+
+                    // New list to save results to
+                    List<GameEntry> convertedResults = new ArrayList<>();
+                    if (results != null && results.size() > 0) {
+
+//                    // Iterate through Ids and go get more data
+//                    for (GameSearchResult result : results) {
+//                        webservice.getGameById(result.getId(), NetworkUtils.IGDB_API_KEY).enqueue(new Callback<GameDetail>() {
+//                            @Override
+//                            public void onResponse(Call<GameDetail> call, Response<GameDetail> response) {
+//                                GameDetail detail = response.body();
+//                                if (detail != null) {
+//                                    convertedResults.add(
+//                                            new GameEntry(detail.getId(),
+//                                                    detail.getName(),
+//                                                    new Date(),
+//                                                    null,
+//                                                    detail.getCover().getUrl()));
+//                                }
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Call<GameDetail> call, Throwable t) {
+//                                Log.e(TAG, "Failed to retrieve GameDetail for id " + result.getId());
+//                            }
+//                        });
+//                    }
+//                }
+
+
+                        data.setValue(response.body());
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<List<GameSearchResult>> call, Throwable t) {
+                    Log.e(TAG, "Failed to retrieve data from API query");
+                }
+            });
+        }
+
+        return data;
     }
 
 
