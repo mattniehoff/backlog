@@ -104,7 +104,7 @@ public class GameRepository {
                                                             detail.getName(),
                                                             new Date(),
                                                             null,
-                                                            detail.getCover().getHttpUrl()));
+                                                            detail.getCoverUrl()));
                                         }
 
                                         data.setValue(convertedResults);

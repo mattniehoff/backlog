@@ -548,4 +548,14 @@ public class GameDetail implements Parcelable {
         return 0;
     }
 
+    // API response is //www.address.jpg, this returns empty string if no value or null
+    // and the http: prepended address if there is a value
+    public String getCoverUrl() {
+        if (cover != null) {
+            return cover.getHttpUrl();
+        }
+
+        return "";
+    }
+
 }
