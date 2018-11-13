@@ -16,38 +16,38 @@ import com.squareup.picasso.Picasso;
 import java.util.Date;
 import java.util.List;
 
-public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryViewHolder> {
+public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogViewHolder> {
 
     private List<GameEntry> gameEntryList;
 
     private final Context context;
     private final GameEntryOnItemClickHandler clickHandler;
 
-    public LibraryAdapter(@NonNull Context context, GameEntryOnItemClickHandler clickHandler) {
+    public BacklogAdapter(@NonNull Context context, GameEntryOnItemClickHandler clickHandler) {
         this.context = context;
         this.clickHandler = clickHandler;
     }
 
     @NonNull
     @Override
-    public LibraryViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.library_list_item, viewGroup, false);
-        return new LibraryViewHolder(view);
+    public BacklogViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
+        View view = LayoutInflater.from(context).inflate(R.layout.backlog_list_item, viewGroup, false);
+        return new BacklogViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull LibraryViewHolder libraryViewHolder, int position) {
+    public void onBindViewHolder(@NonNull BacklogViewHolder backlogViewHolder, int position) {
         GameEntry gameEntry = gameEntryList.get(position);
 
-        libraryViewHolder.gameTitleTextView.setText(gameEntry.getName());
-        libraryViewHolder.gameIdTextView.setText("Game ID: " + gameEntry.getId());
+        backlogViewHolder.gameTitleTextView.setText(gameEntry.getName());
+        backlogViewHolder.gameIdTextView.setText("Game ID: " + gameEntry.getId());
 
         String gameCoverUrl = gameEntry.getCoverUrl();
         if (gameCoverUrl.length() > 0) {
             Picasso.get()
                     .load(gameCoverUrl)
                     .error(R.drawable.ic_videogame_asset_black_24dp)
-                    .into(libraryViewHolder.gameCoverImageView);
+                    .into(backlogViewHolder.gameCoverImageView);
         }
     }
 
@@ -68,17 +68,17 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
         notifyDataSetChanged();
     }
 
-    class LibraryViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class BacklogViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         final TextView gameTitleTextView;
         final TextView gameIdTextView;
         final ImageView gameCoverImageView;
 
-        LibraryViewHolder(View view) {
+        BacklogViewHolder(View view) {
             super(view);
 
-            gameTitleTextView = view.findViewById(R.id.library_list_item_game_title_text_view);
-            gameIdTextView = view.findViewById(R.id.library_list_item_game_id_text_view);
-            gameCoverImageView = view.findViewById(R.id.library_list_item_cover_image_view);
+            gameTitleTextView = view.findViewById(R.id.backlog_list_item_game_title_text_view);
+            gameIdTextView = view.findViewById(R.id.backlog_list_item_game_id_text_view);
+            gameCoverImageView = view.findViewById(R.id.backlog_list_item_cover_image_view);
 
             view.setOnClickListener(this);
         }

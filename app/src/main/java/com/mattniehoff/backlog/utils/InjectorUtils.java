@@ -5,6 +5,7 @@ import android.content.Context;
 import com.mattniehoff.backlog.AppExecutors;
 import com.mattniehoff.backlog.model.database.AppDatabase;
 import com.mattniehoff.backlog.repository.GameRepository;
+import com.mattniehoff.backlog.viewmodels.BacklogViewModelFactory;
 import com.mattniehoff.backlog.viewmodels.GameDetailViewModelFactory;
 import com.mattniehoff.backlog.viewmodels.LibraryViewModelFactory;
 
@@ -25,5 +26,10 @@ public class InjectorUtils {
     public static LibraryViewModelFactory provideLibraryViewModelFactory(Context context) {
         GameRepository repository = provideRepository(context.getApplicationContext());
         return new LibraryViewModelFactory(repository);
+    }
+
+    public static BacklogViewModelFactory provideBacklogViewModelFactory(Context context) {
+        GameRepository repository = provideRepository(context.getApplicationContext());
+        return new BacklogViewModelFactory(repository);
     }
 }
