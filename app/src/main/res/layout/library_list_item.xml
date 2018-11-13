@@ -42,16 +42,14 @@
             android:id="@+id/library_list_item_cover_image_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
             android:contentDescription="@string/game_cover_content_description"
+            android:minWidth="@dimen/thumbnail_min_width"
+            android:minHeight="@dimen/thumbnail_min_height"
+            android:src="@drawable/ic_videogame_asset_black_24dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/guideline"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:src="@drawable/ic_videogame_asset_black_24dp"
             tools:src="@drawable/ic_videogame_asset_black_24dp" />
 
         <android.support.constraint.Guideline
