@@ -98,14 +98,7 @@ public class SearchFragment extends Fragment {
                 }
 
                 Toast.makeText(getContext(), "Search for " + encodedText, Toast.LENGTH_LONG).show();
-                searchViewModel.init(encodedText);
-                searchViewModel.getSearchResults().observe(getViewLifecycleOwner(), gameSearchResults -> {
-                    searchAdapter.setGameSearchResults(gameSearchResults);
-                    if (position == RecyclerView.NO_POSITION) {
-                        position = 0;
-                    }
-                    recyclerView.smoothScrollToPosition(position);
-                });
+                searchViewModel.runQuery(encodedText);
             }
         });
     }
@@ -115,6 +108,15 @@ public class SearchFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         SearchViewModelFactory factory = InjectorUtils.provideSearchViewModelFactory(getActivity().getApplicationContext());
         searchViewModel = ViewModelProviders.of(this, factory).get(SearchViewModel.class);
+
+        // Run empty query so we can still be ob
+        searchViewModel.getSearchResults().observe(getViewLifecycleOwner(), gameSearchResults -> {
+            searchAdapter.setGameSearchResults(gameSearchResults);
+            if (position == RecyclerView.NO_POSITION) {
+                position = 0;
+            }
+            recyclerView.smoothScrollToPosition(position);
+        });
 
     }
 
