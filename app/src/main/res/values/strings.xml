@@ -23,4 +23,9 @@
     <string name="date_added_prefix">Added:</string>
     <string name="content_description_game_complete">Check mark signifying this game has been completed.</string>
     <string name="date_complete_prefix">Completed:</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="widget_app">Backlog</string>
+    <string name="widget_currently_playing_label">Currently Playing:</string>
+    <string name="appwidget_game_title_default">Nothing currently :\'(</string>
 </resources>
