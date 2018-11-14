@@ -26,8 +26,6 @@ import com.squareup.picasso.Picasso;
 
 import java.util.Date;
 
-import static android.view.View.GONE;
-
 public class GameDetailFragment extends Fragment {
 
     // argument representing item ID for the fragment
@@ -43,6 +41,7 @@ public class GameDetailFragment extends Fragment {
     private ImageView coverImageView;
 
     private Button toggleLibraryButton;
+    private TextView libraryTextView;
 
     private Button toggleBacklogButton;
     private TextView backlogTextView;
@@ -77,13 +76,33 @@ public class GameDetailFragment extends Fragment {
         headerImageView = rootView.findViewById(R.id.game_detail_header_image);
         coverImageView = rootView.findViewById(R.id.game_detail_cover_image_view);
 
+        libraryTextView = rootView.findViewById(R.id.game_detail_library_text_view);
         toggleLibraryButton = rootView.findViewById(R.id.game_detail_button_library);
+        toggleLibraryButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isInLibrary) {
+                    gameDetailViewModel.removeGameFromLibrary();
+                } else {
+                    gameDetailViewModel.saveNewGame();
+                }
+            }
+        });
 
-
-        toggleBacklogButton = rootView.findViewById(R.id.game_detail_button_backlog);
         backlogTextView = rootView.findViewById(R.id.game_detail_backlog_text_view);
+        toggleBacklogButton = rootView.findViewById(R.id.game_detail_button_backlog);
+        toggleBacklogButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isInBacklog) {
+                    gameDetailViewModel.removeFromBacklog();
+                } else {
+                    gameDetailViewModel.addToBacklog();
+                }
+            }
+        });
 
-
+        completeTextView = rootView.findViewById(R.id.game_detail_complete_text_view);
         toggleCompleteButton = rootView.findViewById(R.id.game_detail_button_complete);
         toggleCompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,7 +118,6 @@ public class GameDetailFragment extends Fragment {
             }
         });
 
-        completeTextView = rootView.findViewById(R.id.game_detail_complete_text_view);
 
 
         return rootView;
@@ -158,7 +176,7 @@ public class GameDetailFragment extends Fragment {
 
                             @Override
                             public void onError(Exception e) {
-                                coverImageView.setVisibility(GONE);
+                                coverImageView.setVisibility(View.GONE);
                             }
                         });
             }
@@ -168,9 +186,12 @@ public class GameDetailFragment extends Fragment {
     private void updateGameEntryUi(GameEntry gameEntry) {
         if (gameEntry != null) {
             isInLibrary = true;
+            updateLibraryButtonUi(isInLibrary, gameEntry);
+
+
             if (gameEntry.getBacklogPriority() != null) {
                 isInBacklog = true;
-                toggleBacklogButton.setVisibility(GONE);
+                toggleBacklogButton.setVisibility(View.GONE);
                 backlogTextView.setText(String.format("%s%s", getString(R.string.backlog_position_message_prefix), gameEntry.getBacklogPriority().toString()));
                 toggleVisibility(backlogTextView);
             }
@@ -181,19 +202,32 @@ public class GameDetailFragment extends Fragment {
         }
     }
 
+    private void updateLibraryButtonUi(Boolean isInLibrary, GameEntry gameEntry) {
+        if (isInLibrary) {
+            toggleLibraryButton.setVisibility(View.GONE);
+            libraryTextView.setText(String.format("%s%s", getString(R.string.library_message_prefix), gameEntry.getDateAdded().toString()));
+            libraryTextView.setVisibility(View.VISIBLE);
+
+        } else {
+            toggleLibraryButton.setVisibility(View.VISIBLE);
+            libraryTextView.setText("");
+            libraryTextView.setVisibility(View.GONE);
+        }
+    }
+
     private void toggleVisibility(TextView textView) {
-        if (textView.getVisibility() == GONE) {
+        if (textView.getVisibility() == View.GONE) {
             textView.setVisibility(View.VISIBLE);
         } else {
-            textView.setVisibility(GONE);
+            textView.setVisibility(View.GONE);
         }
     }
 
     // Method hides other buttons and shows date completed message.
     private void showCompletedMessage(Date dateCompleted) {
-        toggleLibraryButton.setVisibility(GONE);
-        toggleBacklogButton.setVisibility(GONE);
-        toggleCompleteButton.setVisibility(GONE);
+        toggleLibraryButton.setVisibility(View.GONE);
+        toggleBacklogButton.setVisibility(View.GONE);
+        toggleCompleteButton.setVisibility(View.GONE);
         completeTextView.setVisibility(View.VISIBLE);
         completeTextView.setText(String.format("%s%s", getString(R.string.date_complete_message_prefix), dateCompleted.toString()));
     }

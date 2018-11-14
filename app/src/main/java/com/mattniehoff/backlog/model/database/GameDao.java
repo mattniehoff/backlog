@@ -38,4 +38,7 @@ public interface GameDao {
 
     @Query("DELETE FROM game_entry WHERE id = :gameId")
     void deleteGameById(int gameId);
+
+    @Query("SELECT COUNT(*) FROM GAME_ENTRY WHERE backlogPriority <> null")
+    LiveData<Integer> getBacklogCount();
 }

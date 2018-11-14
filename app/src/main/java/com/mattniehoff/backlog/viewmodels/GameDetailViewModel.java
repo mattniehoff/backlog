@@ -16,6 +16,9 @@ public class GameDetailViewModel extends ViewModel {
     // GameDetail represents the return call from the API
     private final LiveData<GameDetail> gameDetail;
 
+    // For tracking length of the backlog if we add a new one
+    private final LiveData<Integer> backlogLength;
+
     private final GameRepository repository;
     private final int gameId;
 
@@ -24,6 +27,7 @@ public class GameDetailViewModel extends ViewModel {
         this.gameId = gameId;
         gameDetail = repository.searchGameById(gameId);
         gameEntry = repository.getGameById(gameId);
+        backlogLength = repository.getGameBacklogLength();
     }
 
     public LiveData<GameDetail> getGameDetails() {
@@ -53,5 +57,19 @@ public class GameDetailViewModel extends ViewModel {
         } else {
             saveNewCompletedGame();
         }
+    }
+
+    public void removeGameFromLibrary() {
+        repository.delete(gameEntry.getValue());
+    }
+
+    public void saveNewGame() {
+        repository.insert(new GameEntry(gameDetail.getValue()));
+    }
+
+    public void removeFromBacklog() {
+    }
+
+    public void addToBacklog() {
     }
 }

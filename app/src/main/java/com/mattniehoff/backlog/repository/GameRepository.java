@@ -65,12 +65,16 @@ public class GameRepository {
         return gameDao.getAllBacklogGames();
     }
 
+    public LiveData<Integer> getGameBacklogLength() {
+        return gameDao.getBacklogCount();
+    }
+
     public LiveData<GameEntry> getGameById(int gameId) {
         return gameDao.getGameById(gameId);
     }
 
     // Network operations
-    public LiveData<GameDetail> searchGameById(int gameId){
+    public LiveData<GameDetail> searchGameById(int gameId) {
         final MutableLiveData<GameDetail> data = new MutableLiveData<>();
         webservice.getGameById(gameId, NetworkUtils.IGDB_API_KEY).enqueue(new Callback<List<GameDetail>>() {
             @Override
@@ -124,7 +128,7 @@ public class GameRepository {
                                 }
 
                                 @Override
-                                public void onFailure(Call<List<GameDetail>>  call, Throwable t) {
+                                public void onFailure(Call<List<GameDetail>> call, Throwable t) {
                                     Log.e(TAG, "Failed to retrieve GameDetail for id " + result.getId());
                                 }
                             });
@@ -151,6 +155,11 @@ public class GameRepository {
         new insertAsyncTask(gameDao).execute(entry);
     }
 
+    public void delete(GameEntry entry) {
+        new deleteAsyncTask(gameDao).execute(entry);
+    }
+
+
     private static class insertAsyncTask extends AsyncTask<GameEntry, Void, Void> {
 
         private GameDao gameDao;
@@ -162,6 +171,21 @@ public class GameRepository {
         @Override
         protected Void doInBackground(final GameEntry... params) {
             gameDao.insertGame(params[0]);
+            return null;
+        }
+    }
+
+    private static class deleteAsyncTask extends AsyncTask<GameEntry, Void, Void> {
+
+        private GameDao gameDao;
+
+        deleteAsyncTask(GameDao dao) {
+            gameDao = dao;
+        }
+
+        @Override
+        protected Void doInBackground(final GameEntry... params) {
+            gameDao.deleteGame(params[0]);
             return null;
         }
     }
