@@ -10,4 +10,8 @@
     <string name="backlog_position_message_prefix">Position in Backlog: </string>
     <string name="date_complete_message_prefix">Game Completed on: </string>
     <string name="library_message_prefix">Added to Library on:</string>
+    <string name="add_to_library_button">Add to Library</string>
+    <string name="remove_from_library_button">Remove from Library</string>
+    <string name="remove_from_backlog_button">Remove from Backlog</string>
+    <string name="add_to_backlog_button">Add to Backlog</string>
 </resources>

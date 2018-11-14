@@ -63,9 +63,6 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
     }
 
     public void setGameEntryList(final List<GameEntry> newGameEntryList) {
-        newGameEntryList.add(new GameEntry(1, "The first game", "summary", new Date(), null, null, "f9jvrf3nwdgdil287sla", "kpnxx0mtm8iv1041h67t"));
-        newGameEntryList.add(new GameEntry(2, "The second game", "summary", new Date(), null, null, "f9jvrf3nwdgdil287sla", "fkkiiyjtcu7os0fpvhe0"));
-
         gameEntryList = newGameEntryList;
         notifyDataSetChanged();
     }

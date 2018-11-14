@@ -186,8 +186,6 @@ public class GameDetailFragment extends Fragment {
     private void updateGameEntryUi(GameEntry gameEntry) {
         if (gameEntry != null) {
             isInLibrary = true;
-            updateLibraryButtonUi(isInLibrary, gameEntry);
-
 
             if (gameEntry.getBacklogPriority() != null) {
                 isInBacklog = true;
@@ -199,19 +197,42 @@ public class GameDetailFragment extends Fragment {
             if (gameEntry.getDateCompleted() != null) {
                 showCompletedMessage(gameEntry.getDateCompleted());
             }
+        } else {
+            isInLibrary = false;
+            isInBacklog = false;
         }
+
+        updateLibraryButtonUi(isInLibrary, gameEntry);
+        updateBacklogButtonUi(isInBacklog, gameEntry);
     }
 
     private void updateLibraryButtonUi(Boolean isInLibrary, GameEntry gameEntry) {
         if (isInLibrary) {
-            toggleLibraryButton.setVisibility(View.GONE);
+            toggleLibraryButton.setText(getString(R.string.remove_from_library_button));
+            toggleLibraryButton.setContentDescription(getString(R.string.remove_from_library_button));
             libraryTextView.setText(String.format("%s%s", getString(R.string.library_message_prefix), gameEntry.getDateAdded().toString()));
             libraryTextView.setVisibility(View.VISIBLE);
 
         } else {
-            toggleLibraryButton.setVisibility(View.VISIBLE);
+            toggleLibraryButton.setText(getString(R.string.add_to_library_button));
+            toggleLibraryButton.setContentDescription(getString(R.string.add_to_library_button));
             libraryTextView.setText("");
             libraryTextView.setVisibility(View.GONE);
+        }
+    }
+
+    private void updateBacklogButtonUi(Boolean isInLibrary, GameEntry gameEntry) {
+        if (isInLibrary) {
+            toggleBacklogButton.setText(getString(R.string.remove_from_backlog_button));
+            toggleBacklogButton.setContentDescription(getString(R.string.remove_from_backlog_button));
+            backlogTextView.setText(String.format("%s%s", getString(R.string.backlog_position_message_prefix), gameEntry.getDateAdded().toString()));
+            backlogTextView.setVisibility(View.VISIBLE);
+
+        } else {
+            toggleBacklogButton.setText(getString(R.string.add_to_backlog_button));
+            toggleBacklogButton.setContentDescription(getString(R.string.add_to_backlog_button));
+            backlogTextView.setText("");
+            backlogTextView.setVisibility(View.GONE);
         }
     }
 
