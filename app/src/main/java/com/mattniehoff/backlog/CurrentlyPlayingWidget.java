@@ -6,22 +6,20 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 
+import com.mattniehoff.backlog.utils.SharedPreferencesUtils;
+
 /**
  * Implementation of App Widget functionality.
  */
 public class CurrentlyPlayingWidget extends AppWidgetProvider {
 
-    private static final String SHARED_PREFERENCES_FILE = "com.mattniehoff.backlog";
-    public static final String GAME_ID_KEY = "game_id";
-    public static final String GAME_TITLE_KEY = "game_title";
-
     static void updateAppWidget(Context context, AppWidgetManager appWidgetManager,
                                 int appWidgetId) {
 
         // Get ingredients from SharedPreferences and update.
-        SharedPreferences preferences = context.getSharedPreferences(SHARED_PREFERENCES_FILE, 0);
-        int gameId = preferences.getInt(GAME_ID_KEY, 0);
-        String gameTitle = preferences.getString(GAME_TITLE_KEY, "");
+        SharedPreferences preferences = context.getSharedPreferences(SharedPreferencesUtils.SHARED_PREFERENCES_FILE, 0);
+        int gameId = preferences.getInt(SharedPreferencesUtils.GAME_ID_KEY, 0);
+        String gameTitle = preferences.getString(SharedPreferencesUtils.GAME_TITLE_KEY, "");
 
 
         // Construct the RemoteViews object

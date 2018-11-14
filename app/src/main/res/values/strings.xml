@@ -27,5 +27,5 @@
     <string name="add_widget">Add widget</string>
     <string name="widget_app">Backlog</string>
     <string name="widget_currently_playing_label">Currently Playing:</string>
-    <string name="appwidget_game_title_default">Nothing currently :'(</string>
+    <string name="appwidget_game_title_default">Nothing currently :\'(</string>
 </resources>

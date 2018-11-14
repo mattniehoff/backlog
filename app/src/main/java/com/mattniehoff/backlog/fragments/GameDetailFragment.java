@@ -1,6 +1,10 @@
 package com.mattniehoff.backlog.fragments;
 
+import android.appwidget.AppWidgetManager;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,11 +18,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mattniehoff.backlog.CurrentlyPlayingWidget;
 import com.mattniehoff.backlog.model.database.GameEntry;
 import com.mattniehoff.backlog.model.igdb.GameDetail;
 import com.mattniehoff.backlog.model.igdb.IgdbImageSize;
 import com.mattniehoff.backlog.utils.IgdbImageUtils;
 import com.mattniehoff.backlog.utils.InjectorUtils;
+import com.mattniehoff.backlog.utils.SharedPreferencesUtils;
 import com.mattniehoff.backlog.viewmodels.GameDetailViewModel;
 import com.mattniehoff.backlog.R;
 import com.mattniehoff.backlog.viewmodels.GameDetailViewModelFactory;
@@ -36,6 +42,7 @@ public class GameDetailFragment extends Fragment {
 
     private GameDetailViewModel gameDetailViewModel;
     private int gameId;
+    private String gameTitle;
 
     private TextView titleTextView;
     private TextView summaryTextView;
@@ -132,6 +139,7 @@ public class GameDetailFragment extends Fragment {
             public void onClick(View view) {
                 if (currentlyPlayingCheckBox.isChecked()) {
                     gameDetailViewModel.setCurrentlyPlaying();
+                    updateWidgetText();
                 } else {
                     gameDetailViewModel.removeCurrentlyPlaying();
                 }
@@ -174,6 +182,7 @@ public class GameDetailFragment extends Fragment {
 
         if (gameDetail != null) {
             titleTextView.setText(gameDetail.getName());
+            gameTitle = gameDetail.getName();
             summaryTextView.setText(gameDetail.getSummary());
 
             String gameCoverUrl = IgdbImageUtils.generateImageUrl(gameDetail.getHeaderImageHash(), IgdbImageSize.screenshot_med);
@@ -300,4 +309,22 @@ public class GameDetailFragment extends Fragment {
         completeTextView.setText(String.format("%s%s", getString(R.string.date_complete_message_prefix), dateCompleted.toString()));
     }
 
+    private void updateWidgetText() {
+
+        SharedPreferences preferences = this.getContext().getSharedPreferences(SharedPreferencesUtils.SHARED_PREFERENCES_FILE, 0);
+
+        SharedPreferences.Editor prefEditor = preferences.edit();
+        prefEditor.putInt(SharedPreferencesUtils.GAME_ID_KEY, gameId);
+        prefEditor.putString(SharedPreferencesUtils.GAME_TITLE_KEY, gameTitle);
+        prefEditor.apply();
+
+        // See https://stackoverflow.com/a/7738687/2107568 for triggering update
+        Intent intent = new Intent(getContext(), CurrentlyPlayingWidget.class);
+        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+        int[] ids = AppWidgetManager.getInstance(getActivity().getApplication())
+                .getAppWidgetIds(new ComponentName(getActivity().getApplication(), CurrentlyPlayingWidget.class));
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, ids);
+        getActivity().sendBroadcast(intent);
+    }
 }
