@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.mattniehoff.backlog.R;
 import com.mattniehoff.backlog.model.database.GameEntry;
+import com.mattniehoff.backlog.model.igdb.IgdbImageSize;
+import com.mattniehoff.backlog.utils.IgdbImageUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
@@ -42,7 +44,7 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
         libraryViewHolder.gameTitleTextView.setText(gameEntry.getName());
         libraryViewHolder.gameIdTextView.setText("Game ID: " + gameEntry.getId());
 
-        String gameCoverUrl = gameEntry.getCoverUrl();
+        String gameCoverUrl = IgdbImageUtils.generateImageUrl(gameEntry.getCoverImageHash(), IgdbImageSize.thumb);
         if (gameCoverUrl.length() > 0) {
             Picasso.get()
                     .load(gameCoverUrl)
@@ -61,8 +63,8 @@ public class LibraryAdapter extends RecyclerView.Adapter<LibraryAdapter.LibraryV
     }
 
     public void setGameEntryList(final List<GameEntry> newGameEntryList) {
-        newGameEntryList.add(new GameEntry(1, "The first game", new Date(), null, "http://images.igdb.com/igdb/image/upload/t_thumb/f9jvrf3nwdgdil287sla.jpg"));
-        newGameEntryList.add(new GameEntry(2, "The second game", new Date(), null, "images.igdb.com/igdb/image/upload/t_thumb/f9jvrf3nwdgdil287sla.jpg"));
+        newGameEntryList.add(new GameEntry(1, "The first game", new Date(), null, "f9jvrf3nwdgdil287sla", "uhbwqvqyzd9z28moax4v"));
+        newGameEntryList.add(new GameEntry(2, "The second game", new Date(), null, "f9jvrf3nwdgdil287sla", "fkkiiyjtcu7os0fpvhe0"));
 
         gameEntryList = newGameEntryList;
         notifyDataSetChanged();

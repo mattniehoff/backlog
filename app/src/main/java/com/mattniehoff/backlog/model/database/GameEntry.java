@@ -2,7 +2,6 @@ package com.mattniehoff.backlog.model.database;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import com.mattniehoff.backlog.model.igdb.GameDetail;
@@ -23,14 +22,17 @@ public class GameEntry {
 
     private Integer backlogPriority;
 
-    private String coverUrl;
+    private String coverImageHash;
 
-    public GameEntry(Integer id, @NonNull String name, @NonNull Date dateAdded, Integer backlogPriority, String coverUrl) {
+    private String headerImageHash;
+
+    public GameEntry(Integer id, @NonNull String name, @NonNull Date dateAdded, Integer backlogPriority, String coverImageHash, String headerImageHash) {
         this.id = id;
         this.name = name;
         this.dateAdded = dateAdded;
         this.backlogPriority = backlogPriority;
-        this.coverUrl = coverUrl;
+        this.coverImageHash = coverImageHash;
+        this.headerImageHash = headerImageHash;
     }
 
     // Constructor for game entry that takes a GameDetail.
@@ -40,7 +42,8 @@ public class GameEntry {
         this.name = detail.getName();
         this.dateAdded = new Date();
         this.backlogPriority = null;
-        this.coverUrl = detail.getCoverUrl();
+        this.coverImageHash = detail.getCoverImageHash();
+        this.headerImageHash = detail.getHeaderImageHash();
     }
 
     public Integer getId() {
@@ -77,11 +80,19 @@ public class GameEntry {
         this.backlogPriority = backlogPriority;
     }
 
-    public String getCoverUrl() {
-        return coverUrl;
+    public String getCoverImageHash() {
+        return coverImageHash;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
+    public void setCoverImageHash(String coverImageHash) {
+        this.coverImageHash = coverImageHash;
+    }
+
+    public String getHeaderImageHash() {
+        return headerImageHash;
+    }
+
+    public void setHeaderImageHash(String headerImageHash) {
+        this.headerImageHash = headerImageHash;
     }
 }

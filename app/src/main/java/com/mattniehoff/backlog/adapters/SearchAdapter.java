@@ -11,10 +11,10 @@ import android.widget.TextView;
 
 import com.mattniehoff.backlog.R;
 import com.mattniehoff.backlog.model.database.GameEntry;
-import com.mattniehoff.backlog.model.igdb.GameSearchResult;
+import com.mattniehoff.backlog.model.igdb.IgdbImageSize;
+import com.mattniehoff.backlog.utils.IgdbImageUtils;
 import com.squareup.picasso.Picasso;
 
-import java.util.Date;
 import java.util.List;
 
 public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchViewHolder> {
@@ -42,7 +42,7 @@ public class SearchAdapter extends RecyclerView.Adapter<SearchAdapter.SearchView
         searchViewHolder.gameTitleTextView.setText(gameSearchResult.getName());
         searchViewHolder.gameIdTextView.setText("Game ID: " + gameSearchResult.getId());
 
-        String gameCoverUrl = gameSearchResult.getCoverUrl();
+        String gameCoverUrl = IgdbImageUtils.generateImageUrl(gameSearchResult.getCoverImageHash(), IgdbImageSize.thumb);
         if (gameCoverUrl.length() > 0) {
             Picasso.get()
                     .load(gameCoverUrl)
