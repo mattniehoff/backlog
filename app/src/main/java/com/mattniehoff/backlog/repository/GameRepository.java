@@ -121,11 +121,7 @@ public class GameRepository {
                                         GameDetail detail = detailResult.get(0);
                                         if (detail != null) {
                                             convertedResults.add(
-                                                    new GameEntry(detail.getId(),
-                                                            detail.getName(),
-                                                            new Date(),
-                                                            null,
-                                                            detail.getCoverUrl()));
+                                                    new GameEntry(detail));
                                         }
 
                                         data.setValue(convertedResults);

@@ -5,6 +5,8 @@ import android.arch.persistence.room.PrimaryKey;
 import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
+import com.mattniehoff.backlog.model.igdb.GameDetail;
+
 import java.util.Date;
 
 @Entity(tableName = "game_entry")
@@ -29,6 +31,16 @@ public class GameEntry {
         this.dateAdded = dateAdded;
         this.backlogPriority = backlogPriority;
         this.coverUrl = coverUrl;
+    }
+
+    // Constructor for game entry that takes a GameDetail.
+    // This is useful for turning API results into database-savable entities
+    public GameEntry(GameDetail detail) {
+        this.id = detail.getId();
+        this.name = detail.getName();
+        this.dateAdded = new Date();
+        this.backlogPriority = null;
+        this.coverUrl = detail.getCoverUrl();
     }
 
     public Integer getId() {
