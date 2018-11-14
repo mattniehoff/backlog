@@ -17,7 +17,7 @@
             android:id="@+id/game_detail_header_image"
             android:layout_width="0dp"
             android:layout_height="@dimen/header_image_height"
-            android:background="@color/colorAccent"
+            android:background="@color/colorPrimary"
             android:scaleType="fitXY"
             android:src="@drawable/ic_videogame_asset_black_24dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -36,48 +36,88 @@
             android:layout_width="90dp"
             android:layout_height="90dp"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:visibility="gone"
             android:src="@drawable/ic_gamepad_black_24dp"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/game_detail_header_image" />
+            app:layout_constraintBottom_toTopOf="@+id/game_detail_title_text_view"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
             android:id="@+id/game_detail_title_text_view"
             android:layout_width="wrap_content"
             android:layout_height="25dp"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@color/colorIconText"
             android:text="TextView"
             android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
-            app:layout_constraintStart_toEndOf="@+id/game_detail_cover_image_view"
-            app:layout_constraintTop_toTopOf="@+id/game_detail_cover_image_view" />
+            app:layout_constraintBottom_toBottomOf="@+id/game_detail_header_image"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/button"
+            android:id="@+id/game_detail_button_library"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="28dp"
-            android:text="+ Add to Library"
-            app:layout_constraintBottom_toBottomOf="@+id/game_detail_cover_image_view"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/game_detail_cover_image_view" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            android:text="+"
-            app:layout_constraintEnd_toStartOf="@+id/button3"
-            tools:layout_editor_absoluteY="349dp" />
+            android:text="+ Library"
+            android:textSize="@dimen/game_detail_button_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/game_detail_header_image" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/game_detail_button_backlog"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="+ Backlog"
+            android:textSize="@dimen/game_detail_button_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/game_detail_button_library" />
+
+        <Button
+            android:id="@+id/game_detail_button_complete"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:text="Mark Complete"
+            android:textSize="@dimen/game_detail_button_text_size"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/game_detail_button_backlog" />
+
+        <TextView
+            android:id="@+id/game_detail_summary_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Button"
-            tools:layout_editor_absoluteX="268dp"
-            tools:layout_editor_absoluteY="349dp" />
+            android:layout_marginTop="8dp"
+            android:text="@string/game_detail_summary_label"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/game_detail_button_complete" />
+
+        <TextView
+            android:id="@+id/game_detail_summary_text_view"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            tools:text="Summary Text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/game_detail_summary_label" />
 
     </android.support.constraint.ConstraintLayout>
 </ScrollView>
