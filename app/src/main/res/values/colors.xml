@@ -12,4 +12,7 @@ Color Palette generated from: https://www.materialpalette.com/deep-orange/deep-p
     <color name="colorPrimaryText">#212121</color>
     <color name="colorSecondaryText">#757575</color>
     <color name="colorDivider">#BDBDBD</color>
+
+    <color name="white">#fff</color>
+    <color name="black">#000</color>
 </resources>
