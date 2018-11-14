@@ -24,6 +24,9 @@ public interface GameDao {
     @Query("UPDATE game_entry SET backlogPriority = backlogPriority - 1 WHERE backlogPriority > :priority")
     void updateLaterBacklog(int priority);
 
+    @Query("UPDATE game_entry SET isCurrentlyPlaying = 0 WHERE id <> :gameId")
+    void clearOtherNowPlaying(Integer gameId);
+
     @Query("SELECT COUNT(*) FROM game_entry WHERE backlogPriority is not null")
     LiveData<Integer> getBacklogCount();
 
@@ -47,6 +50,7 @@ public interface GameDao {
 
     @Query("DELETE FROM game_entry WHERE id = :gameId")
     void deleteGameById(int gameId);
+
 
 
 }

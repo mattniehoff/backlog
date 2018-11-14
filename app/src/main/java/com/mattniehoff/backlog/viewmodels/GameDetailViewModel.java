@@ -61,6 +61,7 @@ public class GameDetailViewModel extends ViewModel {
             entry.setBacklogPriority(null);
             entry.setCurrentlyPlaying(true);
             repository.insert(entry);
+            repository.clearOtherNowPlaying(entry.getId());
         }
     }
 
@@ -68,6 +69,7 @@ public class GameDetailViewModel extends ViewModel {
         if (gameEntry.getValue() != null) {
             GameEntry entry = gameEntry.getValue();
             entry.setDateCompleted(new Date());
+            entry.setCurrentlyPlaying(false);
             if (entry.getBacklogPriority() != null) {
                 removeFromBacklog();
             }
@@ -130,6 +132,7 @@ public class GameDetailViewModel extends ViewModel {
             GameEntry entry = gameEntry.getValue();
             entry.setCurrentlyPlaying(true);
             repository.insert(entry);
+            repository.clearOtherNowPlaying(entry.getId());
         } else {
             saveNewCurrentlyPlayingGame();
         }
