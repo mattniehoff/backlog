@@ -1,5 +1,6 @@
 package com.mattniehoff.backlog;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -16,11 +17,13 @@ import com.mattniehoff.backlog.fragments.GameDetailFragment;
 import com.mattniehoff.backlog.fragments.LibraryFragment;
 import com.mattniehoff.backlog.fragments.SearchFragment;
 import com.mattniehoff.backlog.fragments.StatisticsFragment;
+import com.mattniehoff.backlog.model.igdb.GameDetail;
 
 // Used https://www.youtube.com/watch?v=jpaHMcQDaDg for help setting up bottom navigation
 public class MainActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener, GameEntryOnItemClickHandler {
 
+    public static final String WIDGET_INTENT_ID = "widget_intent_id";
     private static final String TAG = MainActivity.class.getSimpleName();
     private static final String BACKSTACK_TAG = "backstack_tag";
 
@@ -90,11 +93,22 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void navigateToFirstFragment(Bundle savedInstanceState) {
-        // TODO: We could/should set first fragment from savedInstanceState if there's something we save off
+
         if (savedInstanceState == null) {
             bottomNavigationView.setSelectedItemId(R.id.navigation_library);
         } else {
-            //TODO: Here is where we do this logic for this.
+        }
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            int gameId = extras.getInt(WIDGET_INTENT_ID);
+
+            Bundle arguments = new Bundle();
+            arguments.putInt(GameDetailFragment.GAME_ID, gameId);
+
+            GameDetailFragment fragment = new GameDetailFragment();
+            fragment.setArguments(arguments);
+            loadFragmentWithBackstack(fragment);
         }
     }
 

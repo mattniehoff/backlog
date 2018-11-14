@@ -1,8 +1,10 @@
 package com.mattniehoff.backlog;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.widget.RemoteViews;
 
@@ -22,8 +24,14 @@ public class CurrentlyPlayingWidget extends AppWidgetProvider {
         String gameTitle = preferences.getString(SharedPreferencesUtils.GAME_TITLE_KEY, "");
 
 
+        Intent intent = new Intent(context, MainActivity.class);
+        intent.putExtra(MainActivity.WIDGET_INTENT_ID, gameId);
+        // https://stackoverflow.com/q/18037991/2107568
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_CANCEL_CURRENT);
+
         // Construct the RemoteViews object
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.currently_playing_widget);
+        views.setOnClickPendingIntent(R.id.appwidget_linear_layout, pendingIntent);
 
         if (gameTitle != null && gameTitle.length() > 0) {
             views.setTextViewText(R.id.appwidget_currently_playing_title, gameTitle);
