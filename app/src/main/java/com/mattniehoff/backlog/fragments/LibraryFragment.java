@@ -1,19 +1,16 @@
 package com.mattniehoff.backlog.fragments;
 
 import android.arch.lifecycle.ViewModelProviders;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mattniehoff.backlog.MainActivity;
 import com.mattniehoff.backlog.adapters.GameEntryOnItemClickHandler;
 import com.mattniehoff.backlog.adapters.LibraryAdapter;
 import com.mattniehoff.backlog.utils.InjectorUtils;
@@ -27,7 +24,7 @@ public class LibraryFragment extends Fragment {
     private LibraryAdapter libraryAdapter;
     private RecyclerView recyclerView;
     private int position = RecyclerView.NO_POSITION;
-    private LibraryViewModel mViewModel;
+    private LibraryViewModel libraryViewModel;
 
     public static LibraryFragment newInstance() {
         return new LibraryFragment();
@@ -51,8 +48,8 @@ public class LibraryFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         LibraryViewModelFactory factory = InjectorUtils.provideLibraryViewModelFactory(getActivity().getApplicationContext());
-        mViewModel = ViewModelProviders.of(this, factory).get(LibraryViewModel.class);
-        mViewModel.getGameLibrary().observe(this, gameLibrary -> {
+        libraryViewModel = ViewModelProviders.of(this, factory).get(LibraryViewModel.class);
+        libraryViewModel.getGameLibrary().observe(this, gameLibrary -> {
             libraryAdapter.setGameEntryList(gameLibrary);
             if (position == RecyclerView.NO_POSITION) {
                 position = 0;

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 
 import com.mattniehoff.backlog.adapters.BacklogAdapter;
 import com.mattniehoff.backlog.adapters.GameEntryOnItemClickHandler;
-import com.mattniehoff.backlog.adapters.LibraryAdapter;
 import com.mattniehoff.backlog.utils.InjectorUtils;
 import com.mattniehoff.backlog.viewmodels.BacklogViewModel;
 import com.mattniehoff.backlog.R;
@@ -25,7 +24,7 @@ public class BacklogFragment extends Fragment {
     private BacklogAdapter backlogAdapter;
     private RecyclerView recyclerView;
     private int position = RecyclerView.NO_POSITION;
-    private BacklogViewModel mViewModel;
+    private BacklogViewModel backlogViewModel;
 
     public static BacklogFragment newInstance() {
         return new BacklogFragment();
@@ -49,8 +48,8 @@ public class BacklogFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         BacklogViewModelFactory factory = InjectorUtils.provideBacklogViewModelFactory(getActivity().getApplicationContext());
-        mViewModel = ViewModelProviders.of(this, factory).get(BacklogViewModel.class);
-        mViewModel.getGameBacklog().observe(this, gameLibrary -> {
+        backlogViewModel = ViewModelProviders.of(this, factory).get(BacklogViewModel.class);
+        backlogViewModel.getGameBacklog().observe(this, gameLibrary -> {
             backlogAdapter.setGameEntryList(gameLibrary);
             if (position == RecyclerView.NO_POSITION) {
                 position = 0;
