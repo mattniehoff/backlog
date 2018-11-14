@@ -78,7 +78,7 @@ public class StatisticsFragment extends Fragment {
             completePercentage = (completeGames * 100) / totalGames;
         }
 
-        completeTotalTextView.setText(String.format(getString(R.string.complete_games_percent_string), completeGames, completePercentage));
+        completeTotalTextView.setText(String.valueOf(completeGames + " (" + completePercentage + "%)"));
 
         backlogTotalTextView.setText(String.valueOf(backlogGames));
     }
