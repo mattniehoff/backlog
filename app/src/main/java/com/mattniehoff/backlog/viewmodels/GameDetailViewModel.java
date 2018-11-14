@@ -99,7 +99,7 @@ public class GameDetailViewModel extends ViewModel {
             entry.setBacklogPriority(getBacklogLength() + 1);
         } else if (gameDetail.getValue() != null) {
             entry = new GameEntry(gameDetail.getValue());
-            entry.setDateCompleted(new Date());
+            entry.setBacklogPriority(getBacklogLength() + 1);
         } else {
             return;
         }
