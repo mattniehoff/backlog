@@ -66,7 +66,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="28dp"
             android:text="+ Library"
             android:textSize="@dimen/game_detail_button_text_size"
             app:layout_constraintEnd_toEndOf="parent"
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="28dp"
             android:text="+ Backlog"
             android:textSize="@dimen/game_detail_button_text_size"
             app:layout_constraintEnd_toEndOf="parent"
@@ -120,7 +120,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="28dp"
             android:text="Mark Complete"
             android:textSize="@dimen/game_detail_button_text_size"
             app:layout_constraintEnd_toEndOf="parent"
@@ -142,6 +142,15 @@
             app:layout_constraintTop_toBottomOf="@+id/game_detail_button_complete"
             tools:text="Completed on: 12/12/2018" />
 
+        <CheckBox
+            android:id="@+id/currently_playing_check_box"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="28dp"
+            android:text="@string/currently_playing_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/game_detail_summary_label" />
+
         <TextView
             android:id="@+id/game_detail_summary_label"
             android:layout_width="wrap_content"
@@ -158,7 +167,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="28dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/game_detail_summary_label"

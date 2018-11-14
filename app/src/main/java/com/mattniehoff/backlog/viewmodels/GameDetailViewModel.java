@@ -54,6 +54,16 @@ public class GameDetailViewModel extends ViewModel {
         }
     }
 
+
+    private void saveNewCurrentlyPlayingGame() {
+        if (gameDetail.getValue() != null) {
+            GameEntry entry = new GameEntry(gameDetail.getValue());
+            entry.setBacklogPriority(null);
+            entry.setCurrentlyPlaying(true);
+            repository.insert(entry);
+        }
+    }
+
     public void markComplete() {
         if (gameEntry.getValue() != null) {
             GameEntry entry = gameEntry.getValue();
@@ -112,6 +122,27 @@ public class GameDetailViewModel extends ViewModel {
             return backlogLength.getValue();
         } else {
             return 0;
+        }
+    }
+
+    public void setCurrentlyPlaying() {
+        if (gameEntry.getValue() != null) {
+            GameEntry entry = gameEntry.getValue();
+            entry.setCurrentlyPlaying(true);
+            repository.insert(entry);
+        } else {
+            saveNewCurrentlyPlayingGame();
+        }
+    }
+
+
+    public void removeCurrentlyPlaying() {
+        GameEntry entry = gameEntry.getValue();
+        if (entry != null) {
+            if (entry.getCurrentlyPlaying()) {
+                entry.setCurrentlyPlaying(false);
+                repository.insert(entry);
+            }
         }
     }
 }

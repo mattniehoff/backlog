@@ -30,7 +30,17 @@ public class GameEntry {
 
     private String headerImageHash;
 
-    public GameEntry(Integer id, @NonNull String name, String summary, @NonNull Date dateAdded, Date dateCompleted, Integer backlogPriority, String coverImageHash, String headerImageHash) {
+    private Boolean isCurrentlyPlaying;
+
+    public GameEntry(Integer id,
+                     @NonNull String name,
+                     String summary,
+                     @NonNull Date dateAdded,
+                     Date dateCompleted,
+                     Integer backlogPriority,
+                     String coverImageHash,
+                     String headerImageHash,
+                     Boolean isCurrentlyPlaying) {
         this.id = id;
         this.name = name;
         this.summary = summary;
@@ -39,6 +49,7 @@ public class GameEntry {
         this.backlogPriority = backlogPriority;
         this.coverImageHash = coverImageHash;
         this.headerImageHash = headerImageHash;
+        this.isCurrentlyPlaying = isCurrentlyPlaying;
     }
 
     // Constructor for game entry that takes a GameDetail.
@@ -52,6 +63,7 @@ public class GameEntry {
         this.backlogPriority = null;
         this.coverImageHash = detail.getCoverImageHash();
         this.headerImageHash = detail.getHeaderImageHash();
+        this.isCurrentlyPlaying = false;
     }
 
     public Integer getId() {
@@ -118,5 +130,13 @@ public class GameEntry {
 
     public void setSummary(String summary) {
         this.summary = summary;
+    }
+
+    public Boolean getCurrentlyPlaying() {
+        return isCurrentlyPlaying;
+    }
+
+    public void setCurrentlyPlaying(Boolean currentlyPlaying) {
+        isCurrentlyPlaying = currentlyPlaying;
     }
 }

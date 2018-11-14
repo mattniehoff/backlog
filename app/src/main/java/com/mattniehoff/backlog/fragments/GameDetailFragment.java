@@ -5,11 +5,12 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,9 +53,12 @@ public class GameDetailFragment extends Fragment {
     private Button toggleCompleteButton;
     private TextView completeTextView;
 
+    private CheckBox currentlyPlayingCheckBox;
+
     private Boolean isInLibrary = false;
     private Boolean isInBacklog = false;
     private Boolean isComplete = false;
+    private Boolean isCurrentlyPlaying = false;
 
     public static GameDetailFragment newInstance() {
         return new GameDetailFragment();
@@ -104,6 +108,8 @@ public class GameDetailFragment extends Fragment {
                     gameDetailViewModel.addToBacklog();
                 }
             }
+
+
         });
 
         completeTextView = rootView.findViewById(R.id.game_detail_complete_text_view);
@@ -117,6 +123,18 @@ public class GameDetailFragment extends Fragment {
                     }
                 } else {
                     gameDetailViewModel.markComplete();
+                }
+            }
+        });
+
+        currentlyPlayingCheckBox = rootView.findViewById(R.id.currently_playing_check_box);
+        currentlyPlayingCheckBox.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (currentlyPlayingCheckBox.isChecked()) {
+                    gameDetailViewModel.setCurrentlyPlaying();
+                } else {
+                    gameDetailViewModel.removeCurrentlyPlaying();
                 }
             }
         });
@@ -206,10 +224,13 @@ public class GameDetailFragment extends Fragment {
                 isComplete = false;
             }
 
+            isCurrentlyPlaying = gameEntry.getCurrentlyPlaying();
+
         } else {
             isInLibrary = false;
             isInBacklog = false;
             isComplete = false;
+            isCurrentlyPlaying = false;
 
             completeTextView.setVisibility(View.GONE);
             toggleCompleteButton.setVisibility(View.VISIBLE);
@@ -218,6 +239,11 @@ public class GameDetailFragment extends Fragment {
         updateLibraryButtonUi(isInLibrary, gameEntry);
         updateBacklogButtonUi(isInBacklog, gameEntry);
         updateCompleteButtonUi(isComplete, gameEntry);
+        updateCurrentlyPlayingCheckboxUi(isCurrentlyPlaying);
+    }
+
+    private void updateCurrentlyPlayingCheckboxUi(Boolean isCurrentlyPlaying) {
+        currentlyPlayingCheckBox.setChecked(isCurrentlyPlaying);
     }
 
     private void updateCompleteButtonUi(Boolean isComplete, GameEntry gameEntry) {
@@ -264,7 +290,6 @@ public class GameDetailFragment extends Fragment {
             toggleBacklogButton.setVisibility(View.VISIBLE);
         }
     }
-
 
 
     // Method hides other buttons and shows date completed message.
