@@ -59,7 +59,7 @@ public class GameDetailViewModel extends ViewModel {
             GameEntry entry = gameEntry.getValue();
             entry.setDateCompleted(new Date());
             if (entry.getBacklogPriority() != null) {
-                repository.updateLaterBacklog(entry.getBacklogPriority());
+                removeFromBacklog();
             }
 
             repository.insert(entry);

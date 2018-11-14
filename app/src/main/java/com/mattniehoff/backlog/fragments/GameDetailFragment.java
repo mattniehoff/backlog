@@ -54,6 +54,7 @@ public class GameDetailFragment extends Fragment {
 
     private Boolean isInLibrary = false;
     private Boolean isInBacklog = false;
+    private Boolean isComplete = false;
 
     public static GameDetailFragment newInstance() {
         return new GameDetailFragment();
@@ -110,7 +111,6 @@ public class GameDetailFragment extends Fragment {
         toggleCompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //showCompletedMessage(new Date());
                 if (!isInLibrary) {
                     if (!gameDetailViewModel.saveNewCompletedGame()) {
                         displayFailedToSaveMessage();
@@ -147,9 +147,9 @@ public class GameDetailFragment extends Fragment {
             updateGameEntryUi(gameEntry);
         });
 
-        // Observe this so it gets updated in the viewmodel
+        // bit of a hack: Observe this so it gets updated in the viewmodel
         gameDetailViewModel.getBacklogCount().observe(getViewLifecycleOwner(), backlogCount -> {
-            Log.i(TAG, "Backlog count now " + backlogCount);
+            // Log.i(TAG, "Backlog count now " + backlogCount);
         });
     }
 
@@ -201,15 +201,38 @@ public class GameDetailFragment extends Fragment {
             }
 
             if (gameEntry.getDateCompleted() != null) {
-                showCompletedMessage(gameEntry.getDateCompleted());
+                isComplete = true;
+            } else {
+                isComplete = false;
             }
+
         } else {
             isInLibrary = false;
             isInBacklog = false;
+            isComplete = false;
+
+            completeTextView.setVisibility(View.GONE);
+            toggleCompleteButton.setVisibility(View.VISIBLE);
         }
 
         updateLibraryButtonUi(isInLibrary, gameEntry);
         updateBacklogButtonUi(isInBacklog, gameEntry);
+        updateCompleteButtonUi(isComplete, gameEntry);
+    }
+
+    private void updateCompleteButtonUi(Boolean isComplete, GameEntry gameEntry) {
+        if (isComplete) {
+            toggleLibraryButton.setVisibility(View.VISIBLE);
+            toggleBacklogButton.setVisibility(View.GONE);
+            toggleCompleteButton.setVisibility(View.GONE);
+            backlogTextView.setVisibility(View.GONE);
+            completeTextView.setVisibility(View.VISIBLE);
+            completeTextView.setText(String.format("%s%s", getString(R.string.date_complete_message_prefix), gameEntry.getDateCompleted().toString()));
+        } else {
+            toggleLibraryButton.setVisibility(View.VISIBLE);
+            toggleBacklogButton.setVisibility(View.VISIBLE);
+            toggleCompleteButton.setVisibility(View.VISIBLE);
+        }
     }
 
     private void updateLibraryButtonUi(Boolean isInLibrary, GameEntry gameEntry) {
@@ -218,12 +241,12 @@ public class GameDetailFragment extends Fragment {
             toggleLibraryButton.setContentDescription(getString(R.string.remove_from_library_button));
             libraryTextView.setText(String.format("%s%s", getString(R.string.library_message_prefix), gameEntry.getDateAdded().toString()));
             libraryTextView.setVisibility(View.VISIBLE);
-
         } else {
             toggleLibraryButton.setText(getString(R.string.add_to_library_button));
             toggleLibraryButton.setContentDescription(getString(R.string.add_to_library_button));
             libraryTextView.setText("");
             libraryTextView.setVisibility(View.GONE);
+            toggleLibraryButton.setVisibility(View.VISIBLE);
         }
     }
 
@@ -233,18 +256,20 @@ public class GameDetailFragment extends Fragment {
             toggleBacklogButton.setContentDescription(getString(R.string.remove_from_backlog_button));
             backlogTextView.setText(String.format("%s%s", getString(R.string.backlog_position_message_prefix), gameEntry.getBacklogPriority().toString()));
             backlogTextView.setVisibility(View.VISIBLE);
-
         } else {
             toggleBacklogButton.setText(getString(R.string.add_to_backlog_button));
             toggleBacklogButton.setContentDescription(getString(R.string.add_to_backlog_button));
             backlogTextView.setText("");
             backlogTextView.setVisibility(View.GONE);
+            toggleBacklogButton.setVisibility(View.VISIBLE);
         }
     }
 
+
+
     // Method hides other buttons and shows date completed message.
     private void showCompletedMessage(Date dateCompleted) {
-        toggleLibraryButton.setVisibility(View.GONE);
+        toggleLibraryButton.setVisibility(View.VISIBLE);
         toggleBacklogButton.setVisibility(View.GONE);
         toggleCompleteButton.setVisibility(View.GONE);
         completeTextView.setVisibility(View.VISIBLE);
