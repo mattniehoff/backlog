@@ -6,4 +6,13 @@
     <string name="title_nav_statistics">Stats</string>
     <string name="hint_search_edit_text">Enter Game Search</string>
     <string name="game_cover_content_description">Image of the game\'s cover</string>
+    <string name="game_detail_summary_label">Summary</string>
+    <string name="backlog_position_message_prefix">Position in Backlog: </string>
+    <string name="date_complete_message_prefix">Game Completed on: </string>
+    <string name="library_message_prefix">Added to Library on:</string>
+    <string name="add_to_library_button">Add to Library</string>
+    <string name="remove_from_library_button">Remove from Library</string>
+    <string name="remove_from_backlog_button">Remove from Backlog</string>
+    <string name="add_to_backlog_button">Add to Backlog</string>
+    <string name="screenshot_content_description">A screenshot of this game.</string>
 </resources>

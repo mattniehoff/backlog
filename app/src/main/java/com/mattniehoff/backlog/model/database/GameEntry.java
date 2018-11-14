@@ -2,8 +2,9 @@ package com.mattniehoff.backlog.model.database;
 
 import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.PrimaryKey;
-import android.os.Parcelable;
 import android.support.annotation.NonNull;
+
+import com.mattniehoff.backlog.model.igdb.GameDetail;
 
 import java.util.Date;
 
@@ -16,19 +17,41 @@ public class GameEntry {
     @NonNull
     private String name;
 
+    private String summary;
+
     @NonNull
     private Date dateAdded;
 
+    private Date dateCompleted;
+
     private Integer backlogPriority;
 
-    private String coverUrl;
+    private String coverImageHash;
 
-    public GameEntry(Integer id, @NonNull String name, @NonNull Date dateAdded, Integer backlogPriority, String coverUrl) {
+    private String headerImageHash;
+
+    public GameEntry(Integer id, @NonNull String name, String summary, @NonNull Date dateAdded, Date dateCompleted, Integer backlogPriority, String coverImageHash, String headerImageHash) {
         this.id = id;
         this.name = name;
+        this.summary = summary;
         this.dateAdded = dateAdded;
+        this.dateCompleted = dateCompleted;
         this.backlogPriority = backlogPriority;
-        this.coverUrl = coverUrl;
+        this.coverImageHash = coverImageHash;
+        this.headerImageHash = headerImageHash;
+    }
+
+    // Constructor for game entry that takes a GameDetail.
+    // This is useful for turning API results into database-savable entities
+    public GameEntry(GameDetail detail) {
+        this.id = detail.getId();
+        this.name = detail.getName();
+        this.summary = detail.getSummary();
+        this.dateAdded = new Date();
+        this.dateCompleted = null;
+        this.backlogPriority = null;
+        this.coverImageHash = detail.getCoverImageHash();
+        this.headerImageHash = detail.getHeaderImageHash();
     }
 
     public Integer getId() {
@@ -65,11 +88,35 @@ public class GameEntry {
         this.backlogPriority = backlogPriority;
     }
 
-    public String getCoverUrl() {
-        return coverUrl;
+    public String getCoverImageHash() {
+        return coverImageHash;
     }
 
-    public void setCoverUrl(String coverUrl) {
-        this.coverUrl = coverUrl;
+    public void setCoverImageHash(String coverImageHash) {
+        this.coverImageHash = coverImageHash;
+    }
+
+    public String getHeaderImageHash() {
+        return headerImageHash;
+    }
+
+    public void setHeaderImageHash(String headerImageHash) {
+        this.headerImageHash = headerImageHash;
+    }
+
+    public Date getDateCompleted() {
+        return dateCompleted;
+    }
+
+    public void setDateCompleted(Date dateCompleted) {
+        this.dateCompleted = dateCompleted;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }

@@ -52,15 +52,6 @@ public class Cover implements Parcelable {
         return url;
     }
 
-    public String getHttpUrl() {
-        if (url.length() > 0) {
-            return "http:" + getUrl();
-        }
-        else {
-            return "";
-        }
-    }
-
     public void setUrl(String url) {
         this.url = url;
     }
