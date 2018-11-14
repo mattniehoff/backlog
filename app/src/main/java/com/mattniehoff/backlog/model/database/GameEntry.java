@@ -17,8 +17,12 @@ public class GameEntry {
     @NonNull
     private String name;
 
+    private String summary;
+
     @NonNull
     private Date dateAdded;
+
+    private Date dateCompleted;
 
     private Integer backlogPriority;
 
@@ -26,10 +30,12 @@ public class GameEntry {
 
     private String headerImageHash;
 
-    public GameEntry(Integer id, @NonNull String name, @NonNull Date dateAdded, Integer backlogPriority, String coverImageHash, String headerImageHash) {
+    public GameEntry(Integer id, @NonNull String name, String summary, @NonNull Date dateAdded, Date dateCompleted, Integer backlogPriority, String coverImageHash, String headerImageHash) {
         this.id = id;
         this.name = name;
+        this.summary = summary;
         this.dateAdded = dateAdded;
+        this.dateCompleted = dateCompleted;
         this.backlogPriority = backlogPriority;
         this.coverImageHash = coverImageHash;
         this.headerImageHash = headerImageHash;
@@ -40,7 +46,9 @@ public class GameEntry {
     public GameEntry(GameDetail detail) {
         this.id = detail.getId();
         this.name = detail.getName();
+        this.summary = detail.getSummary();
         this.dateAdded = new Date();
+        this.dateCompleted = null;
         this.backlogPriority = null;
         this.coverImageHash = detail.getCoverImageHash();
         this.headerImageHash = detail.getHeaderImageHash();
@@ -94,5 +102,21 @@ public class GameEntry {
 
     public void setHeaderImageHash(String headerImageHash) {
         this.headerImageHash = headerImageHash;
+    }
+
+    public Date getDateCompleted() {
+        return dateCompleted;
+    }
+
+    public void setDateCompleted(Date dateCompleted) {
+        this.dateCompleted = dateCompleted;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
     }
 }

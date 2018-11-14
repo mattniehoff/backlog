@@ -8,13 +8,17 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.mattniehoff.backlog.model.database.GameEntry;
 import com.mattniehoff.backlog.model.igdb.GameDetail;
+import com.mattniehoff.backlog.model.igdb.IgdbImageSize;
+import com.mattniehoff.backlog.utils.IgdbImageUtils;
 import com.mattniehoff.backlog.utils.InjectorUtils;
 import com.mattniehoff.backlog.viewmodels.GameDetailViewModel;
 import com.mattniehoff.backlog.R;
 import com.mattniehoff.backlog.viewmodels.GameDetailViewModelFactory;
+import com.squareup.picasso.Picasso;
 
 public class GameDetailFragment extends Fragment {
 
@@ -24,7 +28,7 @@ public class GameDetailFragment extends Fragment {
     private GameDetailViewModel gameDetailViewModel;
     private int gameId;
 
-
+    private ImageView headerImageView;
 
     public static GameDetailFragment newInstance() {
         return new GameDetailFragment();
@@ -42,7 +46,11 @@ public class GameDetailFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.game_detail_fragment, container, false);
+        View rootView = inflater.inflate(R.layout.game_detail_fragment, container, false);
+
+        headerImageView = rootView.findViewById(R.id.game_detail_header_image);
+
+        return rootView;
     }
 
     @Override
@@ -66,7 +74,13 @@ public class GameDetailFragment extends Fragment {
     }
 
     private void updateGameDetailUi(GameDetail gameDetail) {
-
+        String gameCoverUrl = IgdbImageUtils.generateImageUrl(gameDetail.getHeaderImageHash(), IgdbImageSize.screenshot_med);
+        if (gameCoverUrl.length() > 0) {
+            Picasso.get()
+                    .load(gameCoverUrl)
+                    .error(R.drawable.ic_videogame_asset_black_24dp)
+                    .into(headerImageView);
+        }
     }
 
     private void updateGameEntryUi(GameEntry gameEntry) {
