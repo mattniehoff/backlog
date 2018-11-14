@@ -18,8 +18,17 @@ public interface GameDao {
     @Query("SELECT * FROM game_entry WHERE id = :gameId")
     LiveData<GameEntry> getGameById(int gameId);
 
-    @Query("SELECT * FROM GAME_ENTRY WHERE backlogPriority <> null")
+    @Query("SELECT * FROM game_entry WHERE backlogPriority is not null ORDER BY backlogPriority")
     LiveData<List<GameEntry>> getAllBacklogGames();
+
+    @Query("UPDATE game_entry SET backlogPriority = backlogPriority - 1 WHERE backlogPriority > :priority")
+    void updateLaterBacklog(int priority);
+
+    @Query("SELECT COUNT(*) FROM game_entry WHERE backlogPriority is not null")
+    LiveData<Integer> getBacklogCount();
+
+    @Query("SELECT COUNT(*) FROM game_entry")
+    LiveData<Integer> getRowCount();
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertGame(GameEntry gameEntry);
@@ -39,6 +48,5 @@ public interface GameDao {
     @Query("DELETE FROM game_entry WHERE id = :gameId")
     void deleteGameById(int gameId);
 
-    @Query("SELECT COUNT(*) FROM GAME_ENTRY WHERE backlogPriority <> null")
-    LiveData<Integer> getBacklogCount();
+
 }

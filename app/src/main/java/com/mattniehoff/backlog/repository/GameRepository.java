@@ -159,6 +159,11 @@ public class GameRepository {
         new deleteAsyncTask(gameDao).execute(entry);
     }
 
+    public void updateLaterBacklog(int backlogPriority) {
+       // gameDao.updateLaterBacklog(backlogPriority);
+        new updateBacklogAsyncTask(gameDao).execute(backlogPriority);
+    }
+
 
     private static class insertAsyncTask extends AsyncTask<GameEntry, Void, Void> {
 
@@ -186,6 +191,19 @@ public class GameRepository {
         @Override
         protected Void doInBackground(final GameEntry... params) {
             gameDao.deleteGame(params[0]);
+            return null;
+        }
+    }
+
+
+    private static class updateBacklogAsyncTask extends AsyncTask<Integer, Void, Void> {
+        private GameDao gameDao;
+
+        updateBacklogAsyncTask(GameDao dao) { gameDao = dao; }
+
+        @Override
+        protected Void doInBackground(final Integer... params) {
+            gameDao.updateLaterBacklog(params[0]);
             return null;
         }
     }

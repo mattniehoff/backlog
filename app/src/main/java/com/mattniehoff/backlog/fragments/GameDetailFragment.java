@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,8 @@ import com.squareup.picasso.Picasso;
 import java.util.Date;
 
 public class GameDetailFragment extends Fragment {
+
+    private static final String TAG = GameDetailFragment.class.getSimpleName();
 
     // argument representing item ID for the fragment
     public static final String GAME_ID = "game_id";
@@ -118,8 +121,6 @@ public class GameDetailFragment extends Fragment {
             }
         });
 
-
-
         return rootView;
     }
 
@@ -144,6 +145,11 @@ public class GameDetailFragment extends Fragment {
         // Observe call to database entry
         gameDetailViewModel.getGameEntry().observe(getViewLifecycleOwner(), gameEntry -> {
             updateGameEntryUi(gameEntry);
+        });
+
+        // Observe this so it gets updated in the viewmodel
+        gameDetailViewModel.getBacklogCount().observe(getViewLifecycleOwner(), backlogCount -> {
+            Log.i(TAG, "Backlog count now " + backlogCount);
         });
     }
 
@@ -189,9 +195,9 @@ public class GameDetailFragment extends Fragment {
 
             if (gameEntry.getBacklogPriority() != null) {
                 isInBacklog = true;
-                toggleBacklogButton.setVisibility(View.GONE);
                 backlogTextView.setText(String.format("%s%s", getString(R.string.backlog_position_message_prefix), gameEntry.getBacklogPriority().toString()));
-                toggleVisibility(backlogTextView);
+            } else {
+                isInBacklog = false;
             }
 
             if (gameEntry.getDateCompleted() != null) {
@@ -221,11 +227,11 @@ public class GameDetailFragment extends Fragment {
         }
     }
 
-    private void updateBacklogButtonUi(Boolean isInLibrary, GameEntry gameEntry) {
-        if (isInLibrary) {
+    private void updateBacklogButtonUi(Boolean isInBacklog, GameEntry gameEntry) {
+        if (isInBacklog) {
             toggleBacklogButton.setText(getString(R.string.remove_from_backlog_button));
             toggleBacklogButton.setContentDescription(getString(R.string.remove_from_backlog_button));
-            backlogTextView.setText(String.format("%s%s", getString(R.string.backlog_position_message_prefix), gameEntry.getDateAdded().toString()));
+            backlogTextView.setText(String.format("%s%s", getString(R.string.backlog_position_message_prefix), gameEntry.getBacklogPriority().toString()));
             backlogTextView.setVisibility(View.VISIBLE);
 
         } else {
@@ -233,14 +239,6 @@ public class GameDetailFragment extends Fragment {
             toggleBacklogButton.setContentDescription(getString(R.string.add_to_backlog_button));
             backlogTextView.setText("");
             backlogTextView.setVisibility(View.GONE);
-        }
-    }
-
-    private void toggleVisibility(TextView textView) {
-        if (textView.getVisibility() == View.GONE) {
-            textView.setVisibility(View.VISIBLE);
-        } else {
-            textView.setVisibility(View.GONE);
         }
     }
 

@@ -38,9 +38,14 @@ public class GameDetailViewModel extends ViewModel {
         return this.gameEntry;
     }
 
+    public LiveData<Integer> getBacklogCount() {
+        return this.backlogLength;
+    }
+
     public boolean saveNewCompletedGame() {
         if (gameDetail.getValue() != null) {
             GameEntry entry = new GameEntry(gameDetail.getValue());
+            entry.setBacklogPriority(null);
             entry.setDateCompleted(new Date());
             repository.insert(entry);
             return true;
@@ -53,6 +58,10 @@ public class GameDetailViewModel extends ViewModel {
         if (gameEntry.getValue() != null) {
             GameEntry entry = gameEntry.getValue();
             entry.setDateCompleted(new Date());
+            if (entry.getBacklogPriority() != null) {
+                repository.updateLaterBacklog(entry.getBacklogPriority());
+            }
+
             repository.insert(entry);
         } else {
             saveNewCompletedGame();
@@ -60,6 +69,11 @@ public class GameDetailViewModel extends ViewModel {
     }
 
     public void removeGameFromLibrary() {
+        GameEntry entry = gameEntry.getValue();
+        if (entry != null && entry.getBacklogPriority() != null) {
+            repository.updateLaterBacklog(entry.getBacklogPriority());
+        }
+
         repository.delete(gameEntry.getValue());
     }
 
@@ -68,8 +82,36 @@ public class GameDetailViewModel extends ViewModel {
     }
 
     public void removeFromBacklog() {
+        GameEntry entry = gameEntry.getValue();
+        if (entry != null) {
+            if (entry.getBacklogPriority() != null) {
+                repository.updateLaterBacklog(entry.getBacklogPriority());
+                entry.setBacklogPriority(null);
+                repository.insert(entry);
+            }
+        }
     }
 
     public void addToBacklog() {
+        GameEntry entry;
+        if (gameEntry.getValue() != null) {
+            entry = gameEntry.getValue();
+            entry.setBacklogPriority(getBacklogLength() + 1);
+        } else if (gameDetail.getValue() != null) {
+            entry = new GameEntry(gameDetail.getValue());
+            entry.setDateCompleted(new Date());
+        } else {
+            return;
+        }
+
+        repository.insert(entry);
+    }
+
+    private int getBacklogLength() {
+        if (backlogLength != null && backlogLength.getValue() != null) {
+            return backlogLength.getValue();
+        } else {
+            return 0;
+        }
     }
 }
