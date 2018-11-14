@@ -75,6 +75,27 @@ public class GameRepository {
     }
 
     // Network operations
+    public LiveData<GameDetail> searchGameById(int gameId){
+        final MutableLiveData<GameDetail> data = new MutableLiveData<>();
+        webservice.getGameById(gameId, NetworkUtils.IGDB_API_KEY).enqueue(new Callback<List<GameDetail>>() {
+            @Override
+            public void onResponse(Call<List<GameDetail>> call, Response<List<GameDetail>> response) {
+                List<GameDetail> detailResult = response.body();
+                if (detailResult != null && detailResult.size() > 0) {
+                    GameDetail detail = detailResult.get(0);
+                    data.setValue(detail);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<GameDetail>> call, Throwable t) {
+                Log.e(TAG, "Failed to retrieve GameDetail in searchGameById for id " + gameId);
+            }
+        });
+
+        return data;
+    }
+
     public LiveData<List<GameEntry>> searchGamesByQueryString(String queryString) {
         final MutableLiveData<List<GameEntry>> data = new MutableLiveData<>();
         if (queryString.length() > 0) {
