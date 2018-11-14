@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -22,6 +23,8 @@ import com.mattniehoff.backlog.viewmodels.GameDetailViewModelFactory;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.Date;
+
 public class GameDetailFragment extends Fragment {
 
     // argument representing item ID for the fragment
@@ -35,6 +38,12 @@ public class GameDetailFragment extends Fragment {
 
     private ImageView headerImageView;
     private ImageView coverImageView;
+
+    private Button toggleLibraryButton;
+    private Button toggleBacklogButton;
+
+    private Button toggleCompleteButton;
+    private TextView completeTextView;
 
     public static GameDetailFragment newInstance() {
         return new GameDetailFragment();
@@ -59,6 +68,18 @@ public class GameDetailFragment extends Fragment {
 
         headerImageView = rootView.findViewById(R.id.game_detail_header_image);
         coverImageView = rootView.findViewById(R.id.game_detail_cover_image_view);
+
+        toggleLibraryButton = rootView.findViewById(R.id.game_detail_button_library);
+        toggleBacklogButton = rootView.findViewById(R.id.game_detail_button_backlog);
+        toggleCompleteButton = rootView.findViewById(R.id.game_detail_button_complete);
+        toggleCompleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showCompletedMessage(new Date());
+            }
+        });
+        completeTextView = rootView.findViewById(R.id.game_detail_complete_text_view);
+
 
         return rootView;
     }
@@ -118,7 +139,21 @@ public class GameDetailFragment extends Fragment {
     }
 
     private void updateGameEntryUi(GameEntry gameEntry) {
+        if (gameEntry != null) {
+            if (gameEntry.getDateCompleted() != null){
+                showCompletedMessage(gameEntry.getDateCompleted());
+            }
 
+        }
+    }
+
+    // Method hides other buttons and shows date completed message.
+    private void showCompletedMessage(Date dateCompleted) {
+        toggleLibraryButton.setVisibility(View.GONE);
+        toggleBacklogButton.setVisibility(View.GONE);
+        toggleCompleteButton.setVisibility(View.GONE);
+        completeTextView.setVisibility(View.VISIBLE);
+        completeTextView.setText("Game Completed on: " + dateCompleted.toString());
     }
 
 }
