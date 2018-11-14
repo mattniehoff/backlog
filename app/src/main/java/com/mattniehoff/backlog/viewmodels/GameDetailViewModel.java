@@ -7,6 +7,8 @@ import com.mattniehoff.backlog.model.database.GameEntry;
 import com.mattniehoff.backlog.model.igdb.GameDetail;
 import com.mattniehoff.backlog.repository.GameRepository;
 
+import java.util.Date;
+
 public class GameDetailViewModel extends ViewModel {
     // GameEntry represents the entry in the database;
     private final LiveData<GameEntry> gameEntry;
@@ -30,5 +32,26 @@ public class GameDetailViewModel extends ViewModel {
 
     public LiveData<GameEntry> getGameEntry() {
         return this.gameEntry;
+    }
+
+    public boolean saveNewCompletedGame() {
+        if (gameDetail.getValue() != null) {
+            GameEntry entry = new GameEntry(gameDetail.getValue());
+            entry.setDateCompleted(new Date());
+            repository.insert(entry);
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public void markComplete() {
+        if (gameEntry.getValue() != null) {
+            GameEntry entry = gameEntry.getValue();
+            entry.setDateCompleted(new Date());
+            repository.insert(entry);
+        } else {
+            saveNewCompletedGame();
+        }
     }
 }

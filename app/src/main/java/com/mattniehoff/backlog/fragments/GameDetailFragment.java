@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mattniehoff.backlog.model.database.GameEntry;
 import com.mattniehoff.backlog.model.igdb.GameDetail;
@@ -24,6 +25,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Date;
+
+import static android.view.View.GONE;
 
 public class GameDetailFragment extends Fragment {
 
@@ -40,10 +43,15 @@ public class GameDetailFragment extends Fragment {
     private ImageView coverImageView;
 
     private Button toggleLibraryButton;
+
     private Button toggleBacklogButton;
+    private TextView backlogTextView;
 
     private Button toggleCompleteButton;
     private TextView completeTextView;
+
+    private Boolean isInLibrary = false;
+    private Boolean isInBacklog = false;
 
     public static GameDetailFragment newInstance() {
         return new GameDetailFragment();
@@ -70,18 +78,35 @@ public class GameDetailFragment extends Fragment {
         coverImageView = rootView.findViewById(R.id.game_detail_cover_image_view);
 
         toggleLibraryButton = rootView.findViewById(R.id.game_detail_button_library);
+
+
         toggleBacklogButton = rootView.findViewById(R.id.game_detail_button_backlog);
+        backlogTextView = rootView.findViewById(R.id.game_detail_backlog_text_view);
+
+
         toggleCompleteButton = rootView.findViewById(R.id.game_detail_button_complete);
         toggleCompleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                showCompletedMessage(new Date());
+                //showCompletedMessage(new Date());
+                if (!isInLibrary) {
+                    if (!gameDetailViewModel.saveNewCompletedGame()) {
+                        displayFailedToSaveMessage();
+                    }
+                } else {
+                    gameDetailViewModel.markComplete();
+                }
             }
         });
+
         completeTextView = rootView.findViewById(R.id.game_detail_complete_text_view);
 
 
         return rootView;
+    }
+
+    private void displayFailedToSaveMessage() {
+        Toast.makeText(getContext(), "Currently unable to save game. May be offline.", Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -106,54 +131,71 @@ public class GameDetailFragment extends Fragment {
 
     private void updateGameDetailUi(GameDetail gameDetail) {
 
-        titleTextView.setText(gameDetail.getName());
-        summaryTextView.setText(gameDetail.getSummary());
+        if (gameDetail != null) {
+            titleTextView.setText(gameDetail.getName());
+            summaryTextView.setText(gameDetail.getSummary());
 
-        String gameCoverUrl = IgdbImageUtils.generateImageUrl(gameDetail.getHeaderImageHash(), IgdbImageSize.screenshot_med);
-        if (gameCoverUrl.length() > 0) {
-            Picasso.get()
-                    .load(gameCoverUrl)
-                    .error(R.drawable.ic_videogame_asset_black_24dp)
-                    .into(headerImageView);
-        }
+            String gameCoverUrl = IgdbImageUtils.generateImageUrl(gameDetail.getHeaderImageHash(), IgdbImageSize.screenshot_med);
+            if (gameCoverUrl.length() > 0) {
+                Picasso.get()
+                        .load(gameCoverUrl)
+                        .error(R.drawable.ic_videogame_asset_black_24dp)
+                        .into(headerImageView);
+            }
 
-        String coverImageUrl = IgdbImageUtils.generateImageUrl(gameDetail.getCoverImageHash(), IgdbImageSize.thumb);
-        if (!coverImageUrl.isEmpty()) {
-            coverImageView.setVisibility(View.VISIBLE);
-            Picasso.get()
-                    .load(coverImageUrl)
-                    .into(coverImageView, new Callback() {
-                        // https://stackoverflow.com/a/38620591/2107568
-                        // Don't want to show anything over if we don't have an image to load
-                        @Override
-                        public void onSuccess() {
+            String coverImageUrl = IgdbImageUtils.generateImageUrl(gameDetail.getCoverImageHash(), IgdbImageSize.thumb);
+            if (!coverImageUrl.isEmpty()) {
+                coverImageView.setVisibility(View.VISIBLE);
+                Picasso.get()
+                        .load(coverImageUrl)
+                        .into(coverImageView, new Callback() {
+                            // https://stackoverflow.com/a/38620591/2107568
+                            // Don't want to show anything over if we don't have an image to load
+                            @Override
+                            public void onSuccess() {
 
-                        }
+                            }
 
-                        @Override
-                        public void onError(Exception e) {
-                            coverImageView.setVisibility(View.GONE);
-                        }
-                    });
+                            @Override
+                            public void onError(Exception e) {
+                                coverImageView.setVisibility(GONE);
+                            }
+                        });
+            }
         }
     }
 
     private void updateGameEntryUi(GameEntry gameEntry) {
         if (gameEntry != null) {
-            if (gameEntry.getDateCompleted() != null){
-                showCompletedMessage(gameEntry.getDateCompleted());
+            isInLibrary = true;
+            if (gameEntry.getBacklogPriority() != null) {
+                isInBacklog = true;
+                toggleBacklogButton.setVisibility(GONE);
+                backlogTextView.setText(String.format("%s%s", getString(R.string.backlog_position_message_prefix), gameEntry.getBacklogPriority().toString()));
+                toggleVisibility(backlogTextView);
             }
 
+            if (gameEntry.getDateCompleted() != null) {
+                showCompletedMessage(gameEntry.getDateCompleted());
+            }
+        }
+    }
+
+    private void toggleVisibility(TextView textView) {
+        if (textView.getVisibility() == GONE) {
+            textView.setVisibility(View.VISIBLE);
+        } else {
+            textView.setVisibility(GONE);
         }
     }
 
     // Method hides other buttons and shows date completed message.
     private void showCompletedMessage(Date dateCompleted) {
-        toggleLibraryButton.setVisibility(View.GONE);
-        toggleBacklogButton.setVisibility(View.GONE);
-        toggleCompleteButton.setVisibility(View.GONE);
+        toggleLibraryButton.setVisibility(GONE);
+        toggleBacklogButton.setVisibility(GONE);
+        toggleCompleteButton.setVisibility(GONE);
         completeTextView.setVisibility(View.VISIBLE);
-        completeTextView.setText("Game Completed on: " + dateCompleted.toString());
+        completeTextView.setText(String.format("%s%s", getString(R.string.date_complete_message_prefix), dateCompleted.toString()));
     }
 
 }
