@@ -9,10 +9,15 @@
     <string name="game_detail_summary_label">Summary</string>
     <string name="backlog_position_message_prefix">Position in Backlog: </string>
     <string name="date_complete_message_prefix">Game Completed on: </string>
-    <string name="library_message_prefix">Added to Library on:</string>
+    <string name="library_message_prefix">Added to Library on: </string>
     <string name="add_to_library_button">Add to Library</string>
     <string name="remove_from_library_button">Remove from Library</string>
     <string name="remove_from_backlog_button">Remove from Backlog</string>
     <string name="add_to_backlog_button">Add to Backlog</string>
     <string name="screenshot_content_description">A screenshot of this game.</string>
+    <string name="title_statistics">Backlog Statistics</string>
+    <string name="stats_game_total_label">Games in Library:</string>
+    <string name="stats_complete_total_label">Games Completed</string>
+    <string name="stats_backlog_total_label">Games in Backlog</string>
+    <string name="complete_games_percent_string"><![CDATA[%d (%d%%)]]></string>
 </resources>

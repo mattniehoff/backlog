@@ -4,6 +4,7 @@
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="appbar_height">56dp</dimen>
     <dimen name="title_fragment">24sp</dimen>
+    <dimen name="statistics_header">18sp</dimen>
     <dimen name="elevation_card">8dp</dimen>
     <dimen name="thumbnail_min_height">48dp</dimen>
     <dimen name="thumbnail_min_width">48dp</dimen>
